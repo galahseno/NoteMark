@@ -20,11 +20,13 @@ dependencies {
     // Timber
     implementation(libs.timber)
 
-    implementation(projects.auth.data)
-    implementation(projects.auth.domain)
-    implementation(projects.auth.presentation)
+    with(projects) {
+        implementation(auth.data)
+        implementation(auth.domain)
+        implementation(auth.presentation)
 
-    implementation(projects.core.data)
-    implementation(projects.core.domain)
-    implementation(projects.core.presentation)
+        implementation(core.data)
+        implementation(core.domain)
+        implementation(core.presentation)
+    }
 }
