@@ -63,6 +63,7 @@ compose = [
     "androidx-lifecycle-runtime-compose",
     "androidx-lifecycle-viewmodel-compose",
     "androidx-material3",
+    "androidx-material-icons-extended",
     "androidx-ui",
     "androidx-ui-graphics",
     "androidx-ui-tooling-preview",
