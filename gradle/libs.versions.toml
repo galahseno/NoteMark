@@ -1,4 +1,5 @@
 [versions]
+material3Adaptive = "1.2.0-alpha06"
 agp = "8.9.3"
 androidTools = "31.10.1"
 kotlin = "2.0.21"
@@ -29,6 +30,7 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-material3-adaptive = { group = "androidx.compose.material3.adaptive", name = "adaptive", version.ref = "material3Adaptive" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
@@ -51,6 +53,7 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 notemark-android-application = { id = "notemark.android.application", version = "unspesified" }
 notemark-jvm-library = { id = "notemark.jvm.library", version = "unspesified" }
@@ -63,6 +66,7 @@ compose = [
     "androidx-lifecycle-runtime-compose",
     "androidx-lifecycle-viewmodel-compose",
     "androidx-material3",
+    "androidx-material3-adaptive",
     "androidx-material-icons-extended",
     "androidx-ui",
     "androidx-ui-graphics",

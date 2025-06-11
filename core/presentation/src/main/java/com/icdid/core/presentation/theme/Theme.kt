@@ -25,11 +25,13 @@ fun NoteMarkTheme(
     content: @Composable () -> Unit
 ) {
     val view = LocalView.current
-    val window = (view.context as Activity).window
+    if (!view.isInEditMode) {
+        val window = (view.context as Activity).window
 
-    SideEffect {
-        val insetsController = WindowInsetsControllerCompat(window, view)
-        insetsController.isAppearanceLightStatusBars = true
+        SideEffect {
+            val insetsController = WindowInsetsControllerCompat(window, view)
+            insetsController.isAppearanceLightStatusBars = true
+        }
     }
 
     MaterialTheme(

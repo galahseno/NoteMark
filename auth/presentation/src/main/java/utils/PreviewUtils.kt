@@ -2,11 +2,12 @@ package utils
 
 import androidx.compose.ui.tooling.preview.Preview
 
-private const val MOBILE_WIDTH = 350
-private const val MOBILE_HEIGHT = 800
+// Based on Resizable (Experimental) API 34 emulator specs
+private const val MOBILE_WIDTH = 411   // 1080px ÷ (420dpi ÷ 160) = 411dp
+private const val MOBILE_HEIGHT = 914  // 2400px ÷ (420dpi ÷ 160) = 914dp
 
-private const val TABLET_WIDTH = 600
-private const val TABLET_HEIGHT = 900
+private const val TABLET_WIDTH = 800  // 1200px ÷ (240dpi ÷ 160) = 800dp
+private const val TABLET_HEIGHT = 1280  // 1920px ÷ (240dpi ÷ 160) = 1280dp
 
 @Preview(
     showBackground = true,

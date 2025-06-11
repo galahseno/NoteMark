@@ -26,9 +26,9 @@ enum class DeviceType {
                         else -> MOBILE_LANDSCAPE
                     }
                 }
-                windowSizeClass.isHeightAtLeastBreakpoint(WindowSizeClass.HEIGHT_DP_EXPANDED_LOWER_BOUND) -> TABLET_PORTRAIT
+                windowSizeClass.isHeightAtLeastBreakpoint(WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND) ->  MOBILE_PORTRAIT
 
-                else -> MOBILE_PORTRAIT
+                else -> TABLET_PORTRAIT
             }
         }
     }
