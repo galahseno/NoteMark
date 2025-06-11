@@ -1,4 +1,4 @@
-package com.icdid.core.presentation
+package com.icdid.core.presentation.utils
 
 import android.content.Context
 import androidx.annotation.StringRes

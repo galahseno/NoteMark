@@ -16,6 +16,7 @@ class AndroidAppConventionPlugin : Plugin<Project> {
                 apply(libs.findPlugin("android.application").get().get().pluginId)
                 apply(libs.findPlugin("kotlin.android").get().get().pluginId)
                 apply(libs.findPlugin("kotlin.compose").get().get().pluginId)
+                apply(libs.findPlugin("kotlin.serialization").get().get().pluginId)
             }
 
             extensions.configure<ApplicationExtension> {
