@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.icdid.core.presentation.composables.NoteMarkDefaultScreen
 import com.icdid.core.presentation.model.DeviceType
+import com.icdid.core.presentation.theme.NoteMarkTheme
 import com.icdid.core.presentation.utils.MobilePreviews
 import com.icdid.core.presentation.utils.TabletPreviews
 
@@ -29,6 +30,7 @@ fun LoginScreen(
                 isLoading = state.loading,
                 onEmailTextChange = { onAction(LoginAction.OnEmailTextChange(it)) },
                 onPasswordTextChange = { onAction(LoginAction.OnPasswordTextChange(it)) },
+                onRegisterClicked = { onAction(LoginAction.OnRegisterClicked) }
             )
             DeviceType.TABLET_LANDSCAPE, DeviceType.MOBILE_LANDSCAPE -> LoginLandscapeView(
                 email = state.email,
@@ -37,19 +39,17 @@ fun LoginScreen(
                 isLoading = state.loading,
                 onEmailTextChange = { onAction(LoginAction.OnEmailTextChange(it)) },
                 onPasswordTextChange = { onAction(LoginAction.OnPasswordTextChange(it)) },
+                onRegisterClicked = { onAction(LoginAction.OnRegisterClicked) }
             )
         }
     }
 }
 
 @MobilePreviews
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen()
-}
-
 @TabletPreviews
 @Composable
-fun LoginScreenTabletPortraitPreview() {
-    LoginScreen()
+private fun LoginScreenTabletPreview() {
+    NoteMarkTheme {
+        LoginScreen()
+    }
 }

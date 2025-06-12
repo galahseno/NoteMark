@@ -1,5 +1,6 @@
 package com.icdid.auth.presentation.login.composables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,7 @@ import com.icdid.auth.presentation.R
 import com.icdid.core.presentation.composables.NoteMarkPrimaryButton
 import com.icdid.core.presentation.composables.NoteMarkTextField
 import com.icdid.core.presentation.theme.LocalNoteMarkTypography
+import com.icdid.core.presentation.theme.NoteMarkTheme
 
 @Composable
 fun LoginFormView(
@@ -29,6 +31,7 @@ fun LoginFormView(
     isLoading: Boolean = false,
     onEmailTextChanged: (String) -> Unit = {},
     onPasswordTextChanged: (String) -> Unit = {},
+    onRegisterClicked: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -55,7 +58,7 @@ fun LoginFormView(
         Spacer(modifier = Modifier.size(24.dp))
 
         NoteMarkPrimaryButton(
-            text = stringResource(R.string.login_button_text),
+            text = stringResource(R.string.login_text),
             onClick = {},
             enabled = isLoginButtonEnabled,
             isLoading = isLoading,
@@ -65,7 +68,8 @@ fun LoginFormView(
 
         Text(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .clickable { onRegisterClicked() },
             text = stringResource(R.string.have_not_account),
             style = LocalNoteMarkTypography.current.titleSmall.copy(
                 color = MaterialTheme.colorScheme.primary,
@@ -75,8 +79,10 @@ fun LoginFormView(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun LoginFormPreview() {
-    LoginFormView()
+private fun LoginFormPreview() {
+    NoteMarkTheme {
+        LoginFormView()
+    }
 }

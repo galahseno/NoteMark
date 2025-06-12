@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -25,8 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.icdid.auth.presentation.R
-import com.icdid.core.presentation.composables.NoteMarkOutlinedButton
-import com.icdid.core.presentation.composables.NoteMarkPrimaryButton
+import com.icdid.auth.presentation.landing.composables.LandingButtons
 import com.icdid.core.presentation.theme.LocalNoteMarkTypography
 import com.icdid.core.presentation.theme.NoteMarkTheme
 import com.icdid.core.presentation.utils.MobilePortrait
@@ -57,9 +55,9 @@ fun LandingPortraitView(
                 .fillMaxWidth()
                 .then(
                     if (isTablet) {
-                        Modifier.fillMaxHeight(0.28f)
+                        Modifier.fillMaxHeight(0.3f)
                     } else {
-                        Modifier.fillMaxHeight(0.36f)
+                        Modifier.fillMaxHeight(0.35f)
                     }
                 )
                 .clip(
@@ -102,28 +100,9 @@ fun LandingPortraitView(
                 )
             )
             Spacer(modifier = Modifier.height(24.dp))
-            NoteMarkPrimaryButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(48.dp),
-                text = stringResource(R.string.landing_button_text),
-                onClick = {
-                    onAction(LandingAction.OnGettingStartedClicked)
-                },
-                color = MaterialTheme.colorScheme.primary,
-                textColor = MaterialTheme.colorScheme.onPrimary,
-                enabled = true
-            )
-            NoteMarkOutlinedButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(48.dp),
-                text = stringResource(R.string.login_button_text),
-                onClick = {
-                    onAction(LandingAction.OnLoginClicked)
-                },
-                borderColor = MaterialTheme.colorScheme.primary,
-                textColor = MaterialTheme.colorScheme.primary,
+            LandingButtons(
+                onAction = onAction,
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }

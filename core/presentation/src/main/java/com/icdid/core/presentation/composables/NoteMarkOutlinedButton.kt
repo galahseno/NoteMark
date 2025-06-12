@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.icdid.core.presentation.theme.LocalNoteMarkTypography
+import com.icdid.core.presentation.theme.NoteMarkTheme
 
 @Composable
 fun NoteMarkOutlinedButton(
@@ -53,11 +54,13 @@ fun NoteMarkOutlinedButton(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun NoteMarkOutlinedButtonPreview() {
-    NoteMarkOutlinedButton(
-        text = "Test",
-        onClick = {}
-    )
+private fun NoteMarkOutlinedButtonPreview() {
+    NoteMarkTheme {
+        NoteMarkOutlinedButton(
+            text = "Test",
+            onClick = {}
+        )
+    }
 }
