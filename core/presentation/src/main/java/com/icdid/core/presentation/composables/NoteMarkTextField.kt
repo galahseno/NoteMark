@@ -1,5 +1,6 @@
 package com.icdid.core.presentation.composables
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.icdid.core.presentation.theme.LocalNoteMarkTypography
+import com.icdid.core.presentation.theme.NoteMarkTheme
 import com.icdid.core.presentation.theme.error
 
 @Composable
@@ -53,7 +55,7 @@ fun NoteMarkTextField(
     val showPassword = remember { mutableStateOf(isPassword) }
     val textValue = remember { mutableStateOf(value) }
     val borderColor =
-        if (errorMessage != null) error else if (isFocused) MaterialTheme.colorScheme.primary else Color.Transparent
+        if (errorMessage != null && !isFocused) error else if (isFocused) MaterialTheme.colorScheme.primary else Color.Transparent
 
     Column(
         modifier = modifier
@@ -78,7 +80,7 @@ fun NoteMarkTextField(
                 textValue.value = it
                 onValueChange(it)
             },
-            cursorBrush = SolidColor(if(errorMessage != null) error else MaterialTheme.colorScheme.primary),
+            cursorBrush = SolidColor(if (errorMessage != null && !isFocused) error else MaterialTheme.colorScheme.primary),
             singleLine = true,
             interactionSource = interactionSource,
             decorationBox = { innerTextField ->
@@ -103,7 +105,7 @@ fun NoteMarkTextField(
                 ) {
                     innerTextField()
 
-                    if ((isFocused && textValue.value.isEmpty()) || (!isFocused && textValue.value.isEmpty()) ) {
+                    if ((isFocused && textValue.value.isEmpty()) || (!isFocused && textValue.value.isEmpty())) {
                         placeholder?.let {
                             Text(
                                 text = placeholder,
@@ -139,61 +141,69 @@ fun NoteMarkTextField(
 
         // region Error message
         errorMessage?.let {
-            Spacer(modifier = Modifier.size(7.dp))
+            AnimatedVisibility(
+                visible = !isFocused && errorMessage.isNotBlank(),
+            ) {
+                Spacer(modifier = Modifier.size(7.dp))
 
-            Text(
-                modifier = Modifier
-                    .padding(start = 12.dp),
-                text = it,
-                style = LocalNoteMarkTypography.current.bodySmall.copy(
-                    color = error
+                Text(
+                    modifier = Modifier
+                        .padding(start = 12.dp),
+                    text = it,
+                    style = LocalNoteMarkTypography.current.bodySmall.copy(
+                        color = error
+                    )
                 )
-            )
+            }
         }
         // end region
 
         // region Supporting text
         supportingText?.let {
-            Spacer(modifier = Modifier.size(7.dp))
-            Text(
-                modifier = Modifier
-                    .padding(start = 12.dp),
-                text = it,
-                style = LocalNoteMarkTypography.current.bodySmall.copy(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+            AnimatedVisibility(
+                visible = isFocused,
+            ) {
+                Spacer(modifier = Modifier.size(7.dp))
+                Text(
+                    modifier = Modifier
+                        .padding(start = 12.dp),
+                    text = it,
+                    style = LocalNoteMarkTypography.current.bodySmall.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 )
-            )
+            }
         }
         // end region
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun NoteMarkTextFieldPreview() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.surface)
-            .padding(horizontal = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        NoteMarkTextField(
-            label = "email",
-            placeholder = "john.doe@example.com",
-        )
-        NoteMarkTextField(
-            label = "password",
-            isPassword = true,
-        )
-        NoteMarkTextField(
-            label = "Text field with error",
-            errorMessage = "Password must be at least 8 characters and include a number or symbol"
-        )
-        NoteMarkTextField(
-            label = "Text field with supporting text",
-            supportingText = "Password must be at least 8 characters and include a number or symbol"
-        )
+private fun NoteMarkTextFieldPreview() {
+    NoteMarkTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            NoteMarkTextField(
+                label = "email",
+                placeholder = "john.doe@example.com",
+            )
+            NoteMarkTextField(
+                label = "password",
+                isPassword = true,
+            )
+            NoteMarkTextField(
+                label = "Text field with error",
+                errorMessage = "Password must be at least 8 characters and include a number or symbol"
+            )
+            NoteMarkTextField(
+                label = "Text field with supporting text",
+                supportingText = "Password must be at least 8 characters and include a number or symbol"
+            )
+        }
     }
-
 }

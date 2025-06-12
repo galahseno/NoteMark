@@ -11,9 +11,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.icdid.auth.presentation.landing.LandingAction
 import com.icdid.auth.presentation.landing.LandingScreen
+import com.icdid.auth.presentation.login.LoginAction
 import org.koin.androidx.compose.koinViewModel
 import com.icdid.auth.presentation.login.LoginScreen
 import com.icdid.auth.presentation.login.LoginScreenViewModel
+import com.icdid.auth.presentation.register.RegisterRoot
 
 @Composable
 fun NavigationRoot(
@@ -38,10 +40,18 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
                 onAction = { action ->
                     when(action) {
                         LandingAction.OnGettingStartedClicked -> {
-                            // Handle navigate getting started
+                            navController.navigate(Screen.Auth.Register) {
+                                popUpTo(Screen.Auth.Landing) {
+                                    inclusive = true
+                                }
+                            }
                         }
                         LandingAction.OnLoginClicked -> {
-                            navController.navigate(Screen.Auth.Login)
+                            navController.navigate(Screen.Auth.Login) {
+                                popUpTo(Screen.Auth.Landing) {
+                                    inclusive = true
+                                }
+                            }
                         }
                     }
                 }
@@ -53,11 +63,34 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
 
             LoginScreen(
                 state = state,
-                onAction = loginViewModel::onAction
+                onAction = { action ->
+                    when(action) {
+                        LoginAction.OnRegisterClicked -> {
+                            navController.navigate(Screen.Auth.Register) {
+                                popUpTo<Screen.Auth.Login> {
+                                    inclusive = true
+                                    saveState = true
+                                }
+                                restoreState = true
+                            }
+                        }
+                        else -> loginViewModel.onAction(action)
+                    }
+                }
             )
         }
         composable<Screen.Auth.Register> {
-
+            RegisterRoot(
+                onNavigateToLogin = {
+                    navController.navigate(Screen.Auth.Login) {
+                        popUpTo<Screen.Auth.Register> {
+                            inclusive = true
+                            saveState = true
+                        }
+                        restoreState = true
+                    }
+                }
+            )
         }
     }
 }

@@ -14,6 +14,7 @@ class LoginScreenViewModel : ViewModel() {
             is LoginAction.OnLoginButtonClicked -> onLoginButtonClicked()
             is LoginAction.OnEmailTextChange -> onEmailTextChange(action.email)
             is LoginAction.OnPasswordTextChange -> onPasswordTextChange(action.password)
+            else -> Unit
         }
     }
 

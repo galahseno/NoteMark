@@ -1,4 +1,4 @@
-package com.icdid.auth.presentation.login
+package com.icdid.auth.presentation.register
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -6,23 +6,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.icdid.auth.presentation.login.composables.LoginFormView
-import com.icdid.auth.presentation.login.composables.LoginTitleView
+import com.icdid.auth.presentation.register.composables.RegisterFormView
+import com.icdid.auth.presentation.register.composables.RegisterTitleView
 import com.icdid.core.presentation.theme.NoteMarkTheme
 import com.icdid.core.presentation.utils.MobilePortrait
 import com.icdid.core.presentation.utils.TabletPortrait
 
 @Composable
-fun LoginPortraitView(
+fun RegisterPortraitView(
+    state: RegisterState,
+    onAction: (RegisterAction) -> Unit,
     modifier: Modifier = Modifier,
-    email: String = "",
-    password: String = "",
-    isLoginButtonEnabled: Boolean = false,
-    isLoading: Boolean = false,
     isTablet: Boolean = false,
-    onEmailTextChange: (String) -> Unit = {},
-    onPasswordTextChange: (String) -> Unit = {},
-    onRegisterClicked: () -> Unit = {}
 ) {
     val customModifier = if (isTablet) {
         modifier.padding(
@@ -42,32 +37,32 @@ fun LoginPortraitView(
         modifier = customModifier,
         horizontalAlignment = if(isTablet) Alignment.CenterHorizontally else Alignment.Start,
     ) {
-        LoginTitleView(isTablet = isTablet)
-        LoginFormView(
-            email = email,
-            password = password,
-            isLoginButtonEnabled = isLoginButtonEnabled,
-            isLoading = isLoading,
-            onEmailTextChanged = { onEmailTextChange(it) },
-            onPasswordTextChanged = { onPasswordTextChange(it) },
-            onRegisterClicked = { onRegisterClicked() }
+        RegisterTitleView(isTablet = isTablet)
+        RegisterFormView(
+            state = state,
+            onAction = onAction,
         )
     }
 }
 
 @MobilePortrait
 @Composable
-private fun LoginPortraitViewPreview() {
+private fun RegisterPortraitViewPreview() {
     NoteMarkTheme {
-        LoginPortraitView()
+        RegisterPortraitView(
+            state = RegisterState(),
+            onAction = {}
+        )
     }
 }
 
 @TabletPortrait
 @Composable
-private fun LoginPortraitTabletPreview() {
+private fun RegisterPortraitViewTabletPreview() {
     NoteMarkTheme {
-        LoginPortraitView(
+        RegisterPortraitView(
+            state = RegisterState(),
+            onAction = {},
             isTablet = true
         )
     }

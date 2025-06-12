@@ -5,10 +5,19 @@
     <string name="landing_button_text">Get Started</string>
     <string name="have_not_account">Don\'t have an account?</string>
     <string name="create_account">Create account</string>
+    <string name="username">Username</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="repeat_password">Password</string>
+    <string name="repeat_password">Repeat Password</string>
     <string name="already_have_an_account">Already have an account</string>
-    <string name="password_details">Use 8+ characters with a number or symbol for better security</string>
-    <string name="login_button_text">Log In</string>
+    <string name="login_text">Log In</string>
+    <string name="auth_subtitle">Capture your thoughts and ideas</string>
+    <string name="username_support_text">Use between 3 and 20 characters for your username.</string>
+    <string name="password_support_text">Use 8+ characters with a number or symbol for better security.</string>
+
+    <string name="username_error_min_length">Username must be at least 3 characters.</string>
+    <string name="username_error_max_length">Username can’t be longer than 20 characters.</string>
+    <string name="email_invalid">Invalid email provided</string>
+    <string name="password_invalid">Password must be at least 8 characters and include a number or symbol.</string>
+    <string name="repeat_password_invalid">Passwords do not match</string>
 </resources>
