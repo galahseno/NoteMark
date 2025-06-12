@@ -101,10 +101,9 @@ fun NoteMarkTextField(
                             end = 14.dp,
                         )
                 ) {
-
                     innerTextField()
 
-                    if (!isFocused || textValue.value.isEmpty()) {
+                    if ((isFocused && textValue.value.isEmpty()) || (!isFocused && textValue.value.isEmpty()) ) {
                         placeholder?.let {
                             Text(
                                 text = placeholder,
