@@ -3,6 +3,7 @@ package com.icdid.notemark.navigation
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -10,6 +11,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.icdid.auth.presentation.landing.LandingAction
 import com.icdid.auth.presentation.landing.LandingScreen
+import org.koin.androidx.compose.koinViewModel
+import com.icdid.auth.presentation.login.LoginScreen
+import com.icdid.auth.presentation.login.LoginScreenViewModel
 
 @Composable
 fun NavigationRoot(
@@ -37,14 +41,20 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
                             // Handle navigate getting started
                         }
                         LandingAction.OnLoginClicked -> {
-                            // Handle navigate login
+                            navController.navigate(Screen.Auth.Login)
                         }
                     }
                 }
             )
         }
         composable<Screen.Auth.Login> {
+            val loginViewModel = koinViewModel<LoginScreenViewModel>()
+            val state = loginViewModel.state.collectAsStateWithLifecycle().value
 
+            LoginScreen(
+                state = state,
+                onAction = loginViewModel::onAction
+            )
         }
         composable<Screen.Auth.Register> {
 

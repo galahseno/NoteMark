@@ -3,5 +3,12 @@
     <string name="landing_title">Your Own Collection of Notes</string>
     <string name="landing_subtitle">Capture your thoughts and ideas.</string>
     <string name="landing_button_text">Get Started</string>
+    <string name="have_not_account">Don\'t have an account?</string>
+    <string name="create_account">Create account</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="repeat_password">Password</string>
+    <string name="already_have_an_account">Already have an account</string>
+    <string name="password_details">Use 8+ characters with a number or symbol for better security</string>
     <string name="login_button_text">Log In</string>
 </resources>

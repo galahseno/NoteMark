@@ -1,4 +1,4 @@
-package utils
+package com.icdid.core.presentation.utils
 
 import androidx.compose.ui.tooling.preview.Preview
 

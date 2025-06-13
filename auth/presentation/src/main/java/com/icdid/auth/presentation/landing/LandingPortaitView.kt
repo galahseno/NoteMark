@@ -29,14 +29,14 @@ import com.icdid.core.presentation.composables.NoteMarkOutlinedButton
 import com.icdid.core.presentation.composables.NoteMarkPrimaryButton
 import com.icdid.core.presentation.theme.LocalNoteMarkTypography
 import com.icdid.core.presentation.theme.NoteMarkTheme
+import com.icdid.core.presentation.utils.MobilePortrait
+import com.icdid.core.presentation.utils.TabletPortrait
 import com.icdid.core.presentation.utils.applyIf
-import utils.MobilePortrait
-import utils.TabletPortrait
 
 @Composable
 fun LandingPortraitView(
-    onAction: (LandingAction) -> Unit,
     modifier: Modifier = Modifier,
+    onAction: (LandingAction) -> Unit,
     isTablet: Boolean = false,
 ) {
     Box(

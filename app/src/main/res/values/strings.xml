@@ -2,15 +2,4 @@
     <string name="app_name">NoteMark</string>
 
     <string name="getting_started">Getting started</string>
-    <string name="login">Login</string>
-    <string name="capture_thoughts">Capture your thoughts and ideas</string>
-    <string name="have_not_account">Don\'t have an account?</string>
-
-    <string name="create_account">Create account</string>
-
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="repeat_password">Password</string>
-    <string name="already_have_an_account">Already have an account</string>
-    <string name="password_details">Use 8+ characters with a number or symbol for better security</string>
 </resources>

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +27,7 @@ fun NoteMarkPrimaryButton(
     color: Color = MaterialTheme.colorScheme.primary,
     textColor: Color = MaterialTheme.colorScheme.onPrimary,
     enabled: Boolean = true,
+    isLoading: Boolean = false,
 ) {
     val backgroundColor = if(enabled) color else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
 
@@ -43,15 +45,19 @@ fun NoteMarkPrimaryButton(
             )
             .padding(vertical = 12.dp)
     ) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth(),
-            text = text,
-            style = LocalNoteMarkTypography.current.titleSmall.copy(
-                color = if(enabled) textColor else Color(0xFF979797),
-                textAlign = TextAlign.Center,
-            ),
-        )
+        if(isLoading) {
+            CircularProgressIndicator()
+        } else {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = text,
+                style = LocalNoteMarkTypography.current.titleSmall.copy(
+                    color = if(enabled) textColor else Color(0xFF979797),
+                    textAlign = TextAlign.Center,
+                ),
+            )
+        }
     }
 }
 

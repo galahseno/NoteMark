@@ -1,4 +1,4 @@
-package model
+package com.icdid.core.presentation.model
 
 import androidx.window.core.layout.WindowSizeClass
 

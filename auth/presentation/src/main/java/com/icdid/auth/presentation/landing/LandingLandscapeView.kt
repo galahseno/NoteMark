@@ -29,13 +29,13 @@ import com.icdid.core.presentation.composables.NoteMarkPrimaryButton
 import com.icdid.core.presentation.theme.LocalNoteMarkTypography
 import com.icdid.core.presentation.theme.NoteMarkTheme
 import com.icdid.core.presentation.theme.landingLandscape
-import utils.MobileLandscape
-import utils.TabletLandscape
+import com.icdid.core.presentation.utils.MobileLandscape
+import com.icdid.core.presentation.utils.TabletLandscape
 
 @Composable
 fun LandingLandscapeView(
-    onAction: (LandingAction) -> Unit,
     modifier: Modifier = Modifier,
+    onAction: (LandingAction) -> Unit,
     isTablet: Boolean = false
 ) {
     Box(
