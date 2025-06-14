@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.icdid.auth.presentation.login.composables.LoginFormView
 import com.icdid.auth.presentation.login.composables.LoginTitleView
+import com.icdid.core.presentation.theme.NoteMarkTheme
+import com.icdid.core.presentation.utils.MobileLandscape
+import com.icdid.core.presentation.utils.TabletLandscape
 
 @Composable
 fun LoginLandscapeView(
@@ -19,6 +21,7 @@ fun LoginLandscapeView(
     isLoading: Boolean = false,
     onEmailTextChange: (String) -> Unit = {},
     onPasswordTextChange: (String) -> Unit = {},
+    onRegisterClicked: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -31,7 +34,7 @@ fun LoginLandscapeView(
     ) {
         LoginTitleView(
             modifier = Modifier
-                .weight(1f)
+                .weight(1f),
         )
         LoginFormView(
             modifier = Modifier
@@ -41,13 +44,17 @@ fun LoginLandscapeView(
             isLoginButtonEnabled = isLoginButtonEnabled,
             isLoading = isLoading,
             onEmailTextChanged = { onEmailTextChange(it) },
-            onPasswordTextChanged = { onPasswordTextChange(it) }
+            onPasswordTextChanged = { onPasswordTextChange(it) },
+            onRegisterClicked = { onRegisterClicked() }
         )
     }
 }
 
+@MobileLandscape
+@TabletLandscape
 @Composable
-@Preview
-fun LoginLandscapeViewPreview() {
-    LoginLandscapeView()
+private fun LoginLandscapeViewPreview() {
+    NoteMarkTheme {
+        LoginLandscapeView()
+    }
 }

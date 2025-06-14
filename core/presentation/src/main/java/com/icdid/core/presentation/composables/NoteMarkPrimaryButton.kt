@@ -11,6 +11,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.icdid.core.presentation.theme.LocalNoteMarkTypography
+import com.icdid.core.presentation.theme.NoteMarkTheme
 
 @Composable
 fun NoteMarkPrimaryButton(
@@ -43,7 +45,8 @@ fun NoteMarkPrimaryButton(
                 enabled = enabled,
                 onClick = onClick
             )
-            .padding(vertical = 12.dp)
+            .padding(vertical = 12.dp),
+        contentAlignment = Alignment.Center
     ) {
         if(isLoading) {
             CircularProgressIndicator()
@@ -63,20 +66,23 @@ fun NoteMarkPrimaryButton(
 
 @Preview(showBackground = true)
 @Composable
-fun NoteMarkPrimaryButtonComponent() {
-    Column(
-        modifier = Modifier
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        NoteMarkPrimaryButton(
-            text = "Test",
-            onClick = {}
-        )
-        NoteMarkPrimaryButton(
-            text = "Test",
-            onClick = {},
-            enabled = false,
-        )
+private fun NoteMarkPrimaryButtonComponent() {
+    NoteMarkTheme {
+        Column(
+            modifier = Modifier
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            NoteMarkPrimaryButton(
+                text = "Test",
+                onClick = {},
+            )
+            NoteMarkPrimaryButton(
+                text = "Test",
+                onClick = {},
+                enabled = false,
+                isLoading = true
+            )
+        }
     }
 }

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -24,8 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.icdid.auth.presentation.R
-import com.icdid.core.presentation.composables.NoteMarkOutlinedButton
-import com.icdid.core.presentation.composables.NoteMarkPrimaryButton
+import com.icdid.auth.presentation.landing.composables.LandingButtons
 import com.icdid.core.presentation.theme.LocalNoteMarkTypography
 import com.icdid.core.presentation.theme.NoteMarkTheme
 import com.icdid.core.presentation.theme.landingLandscape
@@ -87,28 +85,9 @@ fun LandingLandscapeView(
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
-            NoteMarkPrimaryButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(48.dp),
-                text = stringResource(R.string.landing_button_text),
-                onClick = {
-                    onAction(LandingAction.OnGettingStartedClicked)
-                },
-                color = MaterialTheme.colorScheme.primary,
-                textColor = MaterialTheme.colorScheme.onPrimary,
-                enabled = true
-            )
-            NoteMarkOutlinedButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(48.dp),
-                text = stringResource(R.string.login_button_text),
-                onClick = {
-                    onAction(LandingAction.OnLoginClicked)
-                },
-                borderColor = MaterialTheme.colorScheme.primary,
-                textColor = MaterialTheme.colorScheme.primary,
+            LandingButtons(
+                onAction = onAction,
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }

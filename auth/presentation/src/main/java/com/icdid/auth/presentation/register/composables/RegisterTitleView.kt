@@ -1,4 +1,4 @@
-package com.icdid.auth.presentation.login.composables
+package com.icdid.auth.presentation.register.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,7 +18,7 @@ import com.icdid.core.presentation.theme.LocalNoteMarkTypography
 import com.icdid.core.presentation.theme.NoteMarkTheme
 
 @Composable
-fun LoginTitleView(
+fun RegisterTitleView(
     modifier: Modifier = Modifier,
     isTablet: Boolean = false,
 ) {
@@ -29,7 +29,7 @@ fun LoginTitleView(
         Text(
             modifier = Modifier
                 .fillMaxWidth(),
-            text = stringResource(R.string.login_text),
+            text = stringResource(R.string.create_account),
             style = LocalNoteMarkTypography.current.titleXLarge.copy(
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = if(isTablet) TextAlign.Center else TextAlign.Start,
@@ -49,8 +49,8 @@ fun LoginTitleView(
 
 @Preview(showBackground = true)
 @Composable
-private fun LoginTitlePreview() {
+private fun RegisterTitleViewPreview() {
     NoteMarkTheme {
-        LoginTitleView()
+        RegisterTitleView()
     }
 }
