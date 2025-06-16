@@ -30,6 +30,7 @@ fun LoginScreen(
                 isLoading = state.loading,
                 onEmailTextChange = { onAction(LoginAction.OnEmailTextChange(it)) },
                 onPasswordTextChange = { onAction(LoginAction.OnPasswordTextChange(it)) },
+                onLoginButtonClicked = { onAction(LoginAction.OnLoginButtonClicked) },
                 onRegisterClicked = { onAction(LoginAction.OnRegisterClicked) }
             )
             DeviceType.TABLET_LANDSCAPE, DeviceType.MOBILE_LANDSCAPE -> LoginLandscapeView(
@@ -39,6 +40,7 @@ fun LoginScreen(
                 isLoading = state.loading,
                 onEmailTextChange = { onAction(LoginAction.OnEmailTextChange(it)) },
                 onPasswordTextChange = { onAction(LoginAction.OnPasswordTextChange(it)) },
+                onLoginButtonClicked = { onAction(LoginAction.OnLoginButtonClicked) },
                 onRegisterClicked = { onAction(LoginAction.OnRegisterClicked) }
             )
         }

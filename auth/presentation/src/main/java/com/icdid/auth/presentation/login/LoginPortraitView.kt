@@ -22,7 +22,8 @@ fun LoginPortraitView(
     isTablet: Boolean = false,
     onEmailTextChange: (String) -> Unit = {},
     onPasswordTextChange: (String) -> Unit = {},
-    onRegisterClicked: () -> Unit = {}
+    onLoginButtonClicked: () -> Unit = {},
+    onRegisterClicked: () -> Unit = {},
 ) {
     val customModifier = if (isTablet) {
         modifier.padding(
@@ -50,7 +51,8 @@ fun LoginPortraitView(
             isLoading = isLoading,
             onEmailTextChanged = { onEmailTextChange(it) },
             onPasswordTextChanged = { onPasswordTextChange(it) },
-            onRegisterClicked = { onRegisterClicked() }
+            onLoginButtonClicked = { onLoginButtonClicked() },
+            onRegisterClicked = { onRegisterClicked() },
         )
     }
 }
