@@ -12,6 +12,8 @@ koin = "4.0.2"
 coreSplashscreen = "1.0.1"
 timber = "5.0.1"
 coroutines = "1.8.1"
+kotlinx-serialization-json = "1.6.3"
+ktor = "3.1.3"
 
 # Project versions
 projectAppId = "com.icdid.notemark"
@@ -41,6 +43,12 @@ koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compos
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktor-serialization-kotlin-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 
 # Gradle
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
@@ -78,3 +86,4 @@ compose-debug = [
 ]
 koin = ["koin-core", "koin-android"]
 koin-compose = ["koin-core", "koin-android", "koin-androidx-compose"]
+ktor = ["ktor-client-core", "ktor-client-android", "ktor-client-logging", "ktor-serialization-kotlin-json", "ktor-client-content-negotiation"]

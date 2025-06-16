@@ -31,6 +31,7 @@ fun LoginFormView(
     isLoading: Boolean = false,
     onEmailTextChanged: (String) -> Unit = {},
     onPasswordTextChanged: (String) -> Unit = {},
+    onLoginButtonClicked: () -> Unit = {},
     onRegisterClicked: () -> Unit = {}
 ) {
     Column(
@@ -59,7 +60,7 @@ fun LoginFormView(
 
         NoteMarkPrimaryButton(
             text = stringResource(R.string.login_text),
-            onClick = {},
+            onClick = { onLoginButtonClicked() },
             enabled = isLoginButtonEnabled,
             isLoading = isLoading,
         )
