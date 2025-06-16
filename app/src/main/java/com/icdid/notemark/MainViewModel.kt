@@ -6,8 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.icdid.core.domain.SessionStorage
-import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 
 class MainViewModel(
@@ -20,10 +21,11 @@ class MainViewModel(
     init {
         sessionStorage
             .get()
-            .distinctUntilChanged()
+            .distinctUntilChangedBy { it.username }
+            .map { it.username }
             .onEach {
                 state = state.copy(
-                    isLoggedIn = it.username.isNotEmpty()
+                    isLoggedIn = it.isNotEmpty()
                 )
             }
             .launchIn(viewModelScope)
