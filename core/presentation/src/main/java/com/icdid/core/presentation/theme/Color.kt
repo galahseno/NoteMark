@@ -1,5 +1,6 @@
 package com.icdid.core.presentation.theme
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 // region Scheme
@@ -18,3 +19,10 @@ val onPrimary = Color(0xFFFFFFFF)
 val brandOpacity12 = Color(0xFFFFFFFF).copy(alpha = 0.12f)
 val landingLandscape = Color(0xFFE0EAFF)
 // end region
+
+val fabBackground = Brush.linearGradient(
+    colors = listOf(
+        Color(0xFF58A1F8),
+        Color(0xFF5A4CF7)
+    ),
+)

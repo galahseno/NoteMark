@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="empty_notes">You’ve got an empty board, \n let’s place your first note on it!</string>
+    <string name="delete_note">Delete Note?</string>
+    <string name="delete_confirmation">Are you sure you want to delete this note? This action cannot be undone.</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+</resources>
