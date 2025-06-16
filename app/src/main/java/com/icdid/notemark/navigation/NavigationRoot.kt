@@ -13,6 +13,8 @@ import com.icdid.auth.presentation.landing.LandingScreen
 import com.icdid.auth.presentation.login.LoginRoot
 import com.icdid.auth.presentation.register.RegisterRoot
 import com.icdid.dashboard.presentation.all_notes.AllNotesRoot
+import com.icdid.dashboard.presentation.all_notes.NoteSample
+import com.icdid.dashboard.presentation.note_detail.NoteDetailRoot
 
 @Composable
 fun NavigationRoot(
@@ -105,7 +107,19 @@ private fun NavGraphBuilder.homeGraph(navController: NavHostController) {
         startDestination = Screen.Home.AllNotes
     ) {
         composable<Screen.Home.AllNotes> {
-            AllNotesRoot()
+            AllNotesRoot(
+                onNavigateToNoteDetail = {
+                    navController.navigate(Screen.Home.NoteDetail)
+                }
+            )
+        }
+
+        composable<Screen.Home.NoteDetail> {
+            NoteDetailRoot(
+                onNavigateBack = {
+                    navController.navigateUp()
+                }
+            )
         }
     }
 }
