@@ -31,7 +31,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AllNotesRoot(
-    viewModel: AllNotesViewModel = koinViewModel()
+    viewModel: AllNotesViewModel = koinViewModel(),
+    onNavigateToNoteDetail: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -41,14 +42,16 @@ fun AllNotesRoot(
 
     AllNotesScreen(
         state = state,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
+        onNavigateToNoteDetail = onNavigateToNoteDetail,
     )
 }
 
 @Composable
 fun AllNotesScreen(
     state: AllNotesState,
-    onAction: (AllNotesAction) -> Unit,
+    onAction: (AllNotesAction) -> Unit = {},
+    onNavigateToNoteDetail: () -> Unit = {},
 ) {
     Scaffold(
         contentWindowInsets = WindowInsets.safeDrawing,
@@ -73,10 +76,10 @@ fun AllNotesScreen(
         floatingActionButton = {
             NoteMarkFAB(
                 onClick = {
-                   // TODO create note api and db
+                    onNavigateToNoteDetail()
                 }
             )
-        }
+        },
     ) { innerPadding ->
         val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
         val deviceType = DeviceType.fromWindowsSizeClass(windowSizeClass)
