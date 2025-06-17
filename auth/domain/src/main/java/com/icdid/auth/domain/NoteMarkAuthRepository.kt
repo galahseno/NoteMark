@@ -1,4 +1,7 @@
-package com.icdid.core.domain
+package com.icdid.auth.domain
+
+import com.icdid.core.domain.DataError
+import com.icdid.core.domain.EmptyResult
 
 interface NoteMarkAuthRepository {
     suspend fun login(email: String, password: String): EmptyResult<DataError.Network>

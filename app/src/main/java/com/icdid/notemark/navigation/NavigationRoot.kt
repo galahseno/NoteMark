@@ -12,10 +12,10 @@ import androidx.navigation.navigation
 import com.icdid.auth.presentation.landing.LandingAction
 import com.icdid.auth.presentation.landing.LandingScreen
 import com.icdid.auth.presentation.login.LoginAction
-import org.koin.androidx.compose.koinViewModel
 import com.icdid.auth.presentation.login.LoginScreen
 import com.icdid.auth.presentation.login.LoginScreenViewModel
 import com.icdid.auth.presentation.register.RegisterRoot
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NavigationRoot(
@@ -82,6 +82,15 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
         composable<Screen.Auth.Register> {
             RegisterRoot(
                 onNavigateToLogin = {
+                    navController.navigate(Screen.Auth.Login) {
+                        popUpTo<Screen.Auth.Register> {
+                            inclusive = true
+                            saveState = true
+                        }
+                        restoreState = true
+                    }
+                },
+                onSuccessfulRegistration = {
                     navController.navigate(Screen.Auth.Login) {
                         popUpTo<Screen.Auth.Register> {
                             inclusive = true

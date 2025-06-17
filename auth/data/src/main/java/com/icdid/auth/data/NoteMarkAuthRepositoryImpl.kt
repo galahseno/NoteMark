@@ -1,11 +1,11 @@
-package com.icdid.core.data
+package com.icdid.auth.data
 
-import com.icdid.core.data.model.request.LoginRequest
-import com.icdid.core.data.model.request.RegisterRequest
+import com.icdid.auth.data.model.LoginRequest
+import com.icdid.auth.data.model.RegisterRequest
+import com.icdid.auth.domain.NoteMarkAuthRepository
 import com.icdid.core.data.model.response.AuthenticationResponse
 import com.icdid.core.domain.DataError
 import com.icdid.core.domain.EmptyResult
-import com.icdid.core.domain.NoteMarkAuthRepository
 import com.icdid.core.domain.Result
 import com.icdid.core.domain.asEmptyDataResult
 import io.ktor.client.HttpClient

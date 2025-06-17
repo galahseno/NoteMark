@@ -20,4 +20,8 @@
     <string name="email_invalid">Invalid email provided</string>
     <string name="password_invalid">Password must be at least 8 characters and include a number or symbol.</string>
     <string name="repeat_password_invalid">Passwords do not match</string>
+
+    <string name="error_user_exist">A user with that email or username already exists.</string>
+    <string name="registration_successful">Registration successful! You can log in now.</string>
+    <string name="ok">OK</string>
 </resources>

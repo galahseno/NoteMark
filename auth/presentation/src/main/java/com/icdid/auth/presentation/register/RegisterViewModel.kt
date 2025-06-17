@@ -2,7 +2,13 @@ package com.icdid.auth.presentation.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.icdid.auth.domain.NoteMarkAuthRepository
 import com.icdid.auth.domain.UserDataValidator
+import com.icdid.auth.presentation.R
+import com.icdid.core.domain.DataError
+import com.icdid.core.domain.Result
+import com.icdid.core.presentation.utils.UiText
+import com.icdid.core.presentation.utils.asUiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,9 +18,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class RegisterViewModel(
-    private val userDataValidator: UserDataValidator
+    private val userDataValidator: UserDataValidator,
+    private val authRepository: NoteMarkAuthRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(RegisterState())
     val state = _state.asStateFlow()
@@ -52,11 +60,39 @@ class RegisterViewModel(
                 _state.update { it.copy(repeatPassword = action.repeatPassword) }
             }
 
-            RegisterAction.OnRegisterClicked -> {
-                // TODO handle register and loading
-            }
+            RegisterAction.OnRegisterClicked -> register()
 
             else -> Unit
+        }
+    }
+
+    private fun register() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            val result = authRepository.register(
+                username = _state.value.username,
+                email = _state.value.email.trim(),
+                password = _state.value.password
+            )
+            _state.update { it.copy(isLoading = false) }
+
+            when (result) {
+                is Result.Error -> {
+                    if (result.error == DataError.Network.CONFLICT) {
+                        _event.send(
+                            RegisterEvent.Error(
+                                UiText.StringResource(R.string.error_user_exist)
+                            )
+                        )
+                    } else {
+                        _event.send(RegisterEvent.Error(result.error.asUiText()))
+                    }
+                }
+
+                is Result.Success -> {
+                    _event.send(RegisterEvent.RegistrationSuccess)
+                }
+            }
         }
     }
 
