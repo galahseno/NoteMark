@@ -16,6 +16,7 @@ class AndroidLibConventionPlugin : Plugin<Project> {
             pluginManager.run {
                 apply(libs.findPlugin("android.library").get().get().pluginId)
                 apply(libs.findPlugin("kotlin.android").get().get().pluginId)
+                apply(libs.findPlugin("kotlin.serialization").get().get().pluginId)
             }
 
             extensions.configure<LibraryExtension> {
@@ -34,6 +35,7 @@ class AndroidLibConventionPlugin : Plugin<Project> {
 
             dependencies {
                 "implementation"(project.libs.findBundle("koin").get())
+                "implementation"(project.libs.findLibrary("kotlinx-serialization").get())
                 "testImplementation"(kotlin("test"))
             }
         }

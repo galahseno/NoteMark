@@ -21,6 +21,7 @@ fun LoginLandscapeView(
     isLoading: Boolean = false,
     onEmailTextChange: (String) -> Unit = {},
     onPasswordTextChange: (String) -> Unit = {},
+    onLoginButtonClicked: () -> Unit = {},
     onRegisterClicked: () -> Unit = {}
 ) {
     Row(
@@ -45,7 +46,8 @@ fun LoginLandscapeView(
             isLoading = isLoading,
             onEmailTextChanged = { onEmailTextChange(it) },
             onPasswordTextChanged = { onPasswordTextChange(it) },
-            onRegisterClicked = { onRegisterClicked() }
+            onLoginButtonClicked = { onLoginButtonClicked() },
+            onRegisterClicked = { onRegisterClicked() },
         )
     }
 }
