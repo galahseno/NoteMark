@@ -12,6 +12,7 @@ import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.serialization.SerializationException
+import java.net.UnknownHostException
 import kotlin.coroutines.cancellation.CancellationException
 
 suspend inline fun <reified Response : Any> HttpClient.get(
@@ -58,6 +59,9 @@ suspend inline fun <reified T> safeCall(execute: () -> HttpResponse): Result<T, 
     val response = try {
         execute()
     } catch (e: UnresolvedAddressException) {
+        e.printStackTrace()
+        return Result.Error(DataError.Network.NO_INTERNET)
+    } catch (e: UnknownHostException) {
         e.printStackTrace()
         return Result.Error(DataError.Network.NO_INTERNET)
     } catch (e: SerializationException) {

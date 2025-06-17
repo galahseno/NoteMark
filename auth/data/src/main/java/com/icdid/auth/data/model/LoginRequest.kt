@@ -1,4 +1,4 @@
-package com.icdid.core.data.model.request
+package com.icdid.auth.data.model
 
 import kotlinx.serialization.Serializable
 
