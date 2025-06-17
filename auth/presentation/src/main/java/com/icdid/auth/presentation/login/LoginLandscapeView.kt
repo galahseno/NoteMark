@@ -15,14 +15,8 @@ import com.icdid.core.presentation.utils.TabletLandscape
 @Composable
 fun LoginLandscapeView(
     modifier: Modifier = Modifier,
-    email: String = "",
-    password: String = "",
-    isLoginButtonEnabled: Boolean = false,
-    isLoading: Boolean = false,
-    onEmailTextChange: (String) -> Unit = {},
-    onPasswordTextChange: (String) -> Unit = {},
-    onLoginButtonClicked: () -> Unit = {},
-    onRegisterClicked: () -> Unit = {}
+    state: LoginState = LoginState(),
+    onAction: (LoginAction) -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -40,14 +34,8 @@ fun LoginLandscapeView(
         LoginFormView(
             modifier = Modifier
                 .weight(1f),
-            email = email,
-            password = password,
-            isLoginButtonEnabled = isLoginButtonEnabled,
-            isLoading = isLoading,
-            onEmailTextChanged = { onEmailTextChange(it) },
-            onPasswordTextChanged = { onPasswordTextChange(it) },
-            onLoginButtonClicked = { onLoginButtonClicked() },
-            onRegisterClicked = { onRegisterClicked() },
+            state = state,
+            onAction = onAction,
         )
     }
 }

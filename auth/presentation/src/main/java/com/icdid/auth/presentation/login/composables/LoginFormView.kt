@@ -17,6 +17,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.icdid.auth.presentation.R
+import com.icdid.auth.presentation.login.LoginAction
+import com.icdid.auth.presentation.login.LoginState
 import com.icdid.core.presentation.composables.NoteMarkPrimaryButton
 import com.icdid.core.presentation.composables.NoteMarkTextField
 import com.icdid.core.presentation.theme.LocalNoteMarkTypography
@@ -25,14 +27,8 @@ import com.icdid.core.presentation.theme.NoteMarkTheme
 @Composable
 fun LoginFormView(
     modifier: Modifier = Modifier,
-    email: String = "",
-    password: String = "",
-    isLoginButtonEnabled: Boolean = false,
-    isLoading: Boolean = false,
-    onEmailTextChanged: (String) -> Unit = {},
-    onPasswordTextChanged: (String) -> Unit = {},
-    onLoginButtonClicked: () -> Unit = {},
-    onRegisterClicked: () -> Unit = {}
+    state: LoginState = LoginState(),
+    onAction: (LoginAction) -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -40,19 +36,19 @@ fun LoginFormView(
             .imePadding()
     ) {
         NoteMarkTextField(
-            value = email,
+            value = state.email,
             label = stringResource(R.string.email),
             placeholder = "john.doe@example.com",
-            onValueChange = { onEmailTextChanged(it) }
+            onValueChange = { onAction(LoginAction.OnEmailChanged(it)) }
         )
 
         Spacer(modifier = Modifier.size(16.dp))
 
         NoteMarkTextField(
-            value = password,
+            value = state.password,
             label = stringResource(R.string.password),
             placeholder = stringResource(R.string.password),
-            onValueChange = { onPasswordTextChanged(it) },
+            onValueChange = { onAction(LoginAction.OnPasswordChanged(it)) },
             isPassword = true,
         )
 
@@ -60,9 +56,9 @@ fun LoginFormView(
 
         NoteMarkPrimaryButton(
             text = stringResource(R.string.login_text),
-            onClick = { onLoginButtonClicked() },
-            enabled = isLoginButtonEnabled,
-            isLoading = isLoading,
+            onClick = { onAction(LoginAction.OnLoginClicked) },
+            enabled = state.isLoginButtonEnabled,
+            isLoading = state.loading,
         )
 
         Spacer(modifier = Modifier.size(24.dp))
@@ -70,7 +66,7 @@ fun LoginFormView(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onRegisterClicked() },
+                .clickable { onAction(LoginAction.OnRegisterClicked) },
             text = stringResource(R.string.have_not_account),
             style = LocalNoteMarkTypography.current.titleSmall.copy(
                 color = MaterialTheme.colorScheme.primary,

@@ -3,7 +3,6 @@ package com.icdid.notemark.navigation
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -11,11 +10,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.icdid.auth.presentation.landing.LandingAction
 import com.icdid.auth.presentation.landing.LandingScreen
-import com.icdid.auth.presentation.login.LoginAction
-import com.icdid.auth.presentation.login.LoginScreen
-import com.icdid.auth.presentation.login.LoginScreenViewModel
+import com.icdid.auth.presentation.login.LoginRoot
 import com.icdid.auth.presentation.register.RegisterRoot
-import org.koin.androidx.compose.koinViewModel
+import com.icdid.dashboard.presentation.all_notes.AllNotesRoot
 
 @Composable
 fun NavigationRoot(
@@ -28,6 +25,7 @@ fun NavigationRoot(
         modifier = Modifier.fillMaxSize()
     ) {
         authGraph(navController)
+        homeGraph(navController)
     }
 }
 
@@ -58,25 +56,23 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
             )
         }
         composable<Screen.Auth.Login> {
-            val loginViewModel = koinViewModel<LoginScreenViewModel>()
-            val state = loginViewModel.state.collectAsStateWithLifecycle().value
-
-            LoginScreen(
-                state = state,
-                onAction = { action ->
-                    when(action) {
-                        LoginAction.OnRegisterClicked -> {
-                            navController.navigate(Screen.Auth.Register) {
-                                popUpTo<Screen.Auth.Login> {
-                                    inclusive = true
-                                    saveState = true
-                                }
-                                restoreState = true
-                            }
+            LoginRoot(
+                onNavigateToRegister = {
+                    navController.navigate(Screen.Auth.Register) {
+                        popUpTo<Screen.Auth.Login> {
+                            saveState = true
                         }
-                        else -> loginViewModel.onAction(action)
+                        restoreState = true
                     }
-                }
+                },
+                onSuccessfulLogin = {
+                    navController.navigate(Screen.Home) {
+                        popUpTo<Screen.Auth.Login> {
+                            inclusive = true
+                            saveState = true
+                        }
+                    }
+                },
             )
         }
         composable<Screen.Auth.Register> {
@@ -100,6 +96,16 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
                     }
                 }
             )
+        }
+    }
+}
+
+private fun NavGraphBuilder.homeGraph(navController: NavHostController) {
+    navigation<Screen.Home>(
+        startDestination = Screen.Home.AllNotes
+    ) {
+        composable<Screen.Home.AllNotes> {
+            AllNotesRoot()
         }
     }
 }
