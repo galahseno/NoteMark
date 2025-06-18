@@ -2,7 +2,7 @@ package com.icdid.auth.presentation.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.icdid.auth.domain.NoteMarkAuthRepository
+import com.icdid.auth.domain.AuthRepository
 import com.icdid.auth.domain.UserDataValidator
 import com.icdid.auth.presentation.R
 import com.icdid.core.domain.DataError
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class RegisterViewModel(
     private val userDataValidator: UserDataValidator,
-    private val authRepository: NoteMarkAuthRepository
+    private val authRepository: AuthRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(RegisterState())
     val state = _state.asStateFlow()

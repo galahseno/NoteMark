@@ -2,23 +2,23 @@ package com.icdid.auth.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.icdid.auth.domain.NoteMarkAuthRepository
+import com.icdid.auth.domain.AuthRepository
 import com.icdid.auth.domain.UserDataValidator
 import com.icdid.auth.presentation.R
 import com.icdid.core.domain.DataError
+import com.icdid.core.domain.Result
+import com.icdid.core.presentation.utils.UiText
+import com.icdid.core.presentation.utils.asUiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import com.icdid.core.domain.Result
-import com.icdid.core.presentation.utils.UiText
-import com.icdid.core.presentation.utils.asUiText
 
 class LoginViewModel(
     private val userDataValidator: UserDataValidator,
-    private val authRepository: NoteMarkAuthRepository
+    private val authRepository: AuthRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(LoginState())
     val state = _state.asStateFlow()
