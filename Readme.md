@@ -36,7 +36,7 @@ We are currently working in **milestone 1**
 
 ## 🎥 Demo ##
 
-![NoteMark Milestone 1 Demo](assets/videos/NoteMark_milestone1_demo.mp4)
+https://github.com/user-attachments/assets/bf4d1fc4-500b-4f3a-8d5f-ecdddd0a1709
 
 ## 📱 Screenshots ##
 
