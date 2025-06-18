@@ -2,26 +2,35 @@ package com.icdid.auth.data
 
 import com.icdid.auth.data.model.LoginRequest
 import com.icdid.auth.data.model.RegisterRequest
-import com.icdid.auth.domain.NoteMarkAuthRepository
-import com.icdid.core.data.model.response.AuthenticationResponse
+import com.icdid.auth.data.model.response.LoginResponse
+import com.icdid.auth.domain.AuthRepository
+import com.icdid.core.data.network.post
 import com.icdid.core.domain.DataError
 import com.icdid.core.domain.EmptyResult
 import com.icdid.core.domain.Result
+import com.icdid.core.domain.SessionStorage
 import com.icdid.core.domain.asEmptyDataResult
+import com.icdid.core.domain.model.AuthInfo
 import io.ktor.client.HttpClient
-import post
 
-class NoteMarkAuthRepositoryImpl(
+class AuthRepositoryImpl(
     private val httpClient: HttpClient,
-) : NoteMarkAuthRepository {
+    private val sessionStorage: SessionStorage
+) : AuthRepository {
     override suspend fun login(email: String, password: String): EmptyResult<DataError.Network> {
-        val result = httpClient.post<LoginRequest, AuthenticationResponse>(
+        val result = httpClient.post<LoginRequest, LoginResponse>(
             route = "/auth/login",
             body = LoginRequest(email, password)
         )
 
-        if(result is Result.Success<*>) {
-            // TODO: Data store, save Auth Info
+        if(result is Result.Success) {
+            sessionStorage.set(
+                AuthInfo(
+                    accessToken = result.data.accessToken,
+                    refreshToken = result.data.refreshToken,
+                    username = result.data.username
+                )
+            )
         }
         return result.asEmptyDataResult()
     }

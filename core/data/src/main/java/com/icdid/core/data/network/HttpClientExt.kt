@@ -1,3 +1,5 @@
+package com.icdid.core.data.network
+
 import com.icdid.core.data.BuildConfig
 import com.icdid.core.domain.DataError
 import com.icdid.core.domain.Result

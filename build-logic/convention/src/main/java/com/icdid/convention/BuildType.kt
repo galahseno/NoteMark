@@ -19,7 +19,7 @@ internal fun Project.configureBuildTypes(
     commonExtension.run {
         defaultConfig {
             buildConfigField("String", "CAMPUS_EMAIL", localProperties.getProperty("campus_email"))
-            buildConfigField("String", "NOTE_MARK_API_URL", "\"https://notemark.pl-coding.com/api\"")
+            buildConfigField("String", "NOTE_MARK_API_URL", localProperties.getProperty("base_url"))
         }
 
         buildFeatures {
