@@ -7,8 +7,10 @@ android {
 }
 
 dependencies {
-    implementation(projects.auth.domain)
-    implementation(projects.core.domain)
-    implementation(projects.core.presentation)
-    implementation(projects.core.data)
+    with(projects) {
+        implementation(auth.domain)
+        implementation(core.domain)
+        implementation(core.presentation)
+        implementation(core.data)
+    }
 }

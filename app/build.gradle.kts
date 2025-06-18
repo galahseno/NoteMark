@@ -28,5 +28,9 @@ dependencies {
         implementation(core.data)
         implementation(core.domain)
         implementation(core.presentation)
+
+        implementation(dashboard.data)
+        implementation(dashboard.domain)
+        implementation(dashboard.presentation)
     }
 }

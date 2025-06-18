@@ -19,6 +19,6 @@ sealed class Screen {
     @Serializable
     data object Home {
         @Serializable
-        data object Dashboard
+        data object AllNotes
     }
 }

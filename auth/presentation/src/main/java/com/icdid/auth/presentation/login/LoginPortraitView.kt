@@ -15,15 +15,9 @@ import com.icdid.core.presentation.utils.TabletPortrait
 @Composable
 fun LoginPortraitView(
     modifier: Modifier = Modifier,
-    email: String = "",
-    password: String = "",
-    isLoginButtonEnabled: Boolean = false,
-    isLoading: Boolean = false,
     isTablet: Boolean = false,
-    onEmailTextChange: (String) -> Unit = {},
-    onPasswordTextChange: (String) -> Unit = {},
-    onLoginButtonClicked: () -> Unit = {},
-    onRegisterClicked: () -> Unit = {},
+    state: LoginState = LoginState(),
+    onAction: (LoginAction) -> Unit = {}
 ) {
     val customModifier = if (isTablet) {
         modifier.padding(
@@ -45,14 +39,8 @@ fun LoginPortraitView(
     ) {
         LoginTitleView(isTablet = isTablet)
         LoginFormView(
-            email = email,
-            password = password,
-            isLoginButtonEnabled = isLoginButtonEnabled,
-            isLoading = isLoading,
-            onEmailTextChanged = { onEmailTextChange(it) },
-            onPasswordTextChanged = { onPasswordTextChange(it) },
-            onLoginButtonClicked = { onLoginButtonClicked() },
-            onRegisterClicked = { onRegisterClicked() },
+            state = state,
+            onAction = onAction
         )
     }
 }
