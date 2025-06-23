@@ -1,5 +1,7 @@
 package com.icdid.dashboard.presentation.note_detail
 
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,6 +13,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -27,30 +31,41 @@ fun NoteDetailRoot(
     onNavigateBack: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
-    ObserveAsEvents(viewModel.event) {
-        when (it) {
+    BackHandler {
+        viewModel.onAction(NoteDetailAction.OnCloseClicked)
+    }
+
+    ObserveAsEvents(viewModel.event) {event ->
+        keyboardController?.hide()
+
+        when (event) {
             NoteDetailEvent.OnDiscardChanges -> {
                 onNavigateBack()
+            }
+
+            is NoteDetailEvent.Error -> {
+                Toast.makeText(context, event.error.asString(context), Toast.LENGTH_LONG).show()
+            }
+
+            NoteDetailEvent.NoteSaved -> {
+                Toast.makeText(context, R.string.successfully_save_note, Toast.LENGTH_LONG).show()
             }
         }
     }
 
     NoteDetailScreen(
         state = state,
-        onAction = { action ->
-            when (action) {
-                is NoteDetailAction.OnConfirmationDialogConfirmed -> onNavigateBack()
-                else -> viewModel.onAction(action)
-            }
-        }
+        onAction = viewModel::onAction
     )
 }
 
 @Composable
 fun NoteDetailScreen(
-    state: NoteDetailState = NoteDetailState(),
-    onAction: (NoteDetailAction) -> Unit = {},
+    state: NoteDetailState,
+    onAction: (NoteDetailAction) -> Unit,
 ) {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val deviceType = DeviceType.fromWindowsSizeClass(windowSizeClass)
@@ -103,6 +118,9 @@ fun NoteDetailScreen(
 @Composable
 fun NoteDetailScreenPreview(modifier: Modifier = Modifier) {
     NoteMarkTheme {
-        NoteDetailScreen()
+        NoteDetailScreen(
+            state = NoteDetailState(),
+            onAction = {}
+        )
     }
 }

@@ -41,9 +41,9 @@ fun String.toDisplayDate(timeZone: ZoneId = ZoneId.systemDefault()): String {
         val currentDate = LocalDate.now(timeZone)
 
         val formatter = if (noteDate.year == currentDate.year) {
-            DateTimeFormatter.ofPattern("d MMM", Locale.ROOT)
+            DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
         } else {
-            DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ROOT)
+            DateTimeFormatter.ofPattern("d MMM yyyy", Locale.getDefault())
         }
 
         noteDate.format(formatter)

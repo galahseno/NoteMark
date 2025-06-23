@@ -36,6 +36,7 @@ class AndroidLibConventionPlugin : Plugin<Project> {
             dependencies {
                 "implementation"(project.libs.findBundle("koin").get())
                 "implementation"(project.libs.findLibrary("kotlinx-serialization").get())
+                "implementation"(project.libs.findBundle("ktor").get())
                 "testImplementation"(kotlin("test"))
             }
         }

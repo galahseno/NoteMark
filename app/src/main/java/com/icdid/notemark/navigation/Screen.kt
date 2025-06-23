@@ -22,6 +22,8 @@ sealed class Screen {
         data object AllNotes
 
         @Serializable
-        data object NoteDetail
+        data class NoteDetail(
+            val noteId: String
+        )
     }
 }

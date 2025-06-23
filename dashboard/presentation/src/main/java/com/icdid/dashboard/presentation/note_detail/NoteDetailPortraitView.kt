@@ -9,6 +9,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.icdid.core.presentation.composables.NoteMarkDefaultTextButton
+import com.icdid.core.presentation.theme.NoteMarkTheme
 import com.icdid.core.presentation.utils.MobilePortrait
 import com.icdid.core.presentation.utils.TabletPortrait
 import com.icdid.dashboard.presentation.R
@@ -39,7 +40,9 @@ fun NoteDetailPortraitView(
 
         NoteMarkDefaultTextButton(
             text = stringResource(R.string.save_note),
-            onClick = { }
+            onClick = {
+                onAction(NoteDetailAction.OnSaveNoteClicked)
+            }
         )
     }
 
@@ -51,15 +54,11 @@ fun NoteDetailPortraitView(
     )
 }
 
-
 @MobilePortrait
-@Composable
-private fun NoteDetailPortraitViewMobilePreview() {
-    NoteDetailPortraitView()
-}
-
 @TabletPortrait
 @Composable
-private fun NoteDetailPortraitViewTabletPreview() {
-    NoteDetailPortraitView()
+private fun NoteDetailPortraitViewMobilePreview() {
+    NoteMarkTheme {
+        NoteDetailPortraitView()
+    }
 }
