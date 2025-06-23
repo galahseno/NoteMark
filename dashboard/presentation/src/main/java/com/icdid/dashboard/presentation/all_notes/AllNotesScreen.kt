@@ -1,15 +1,21 @@
 package com.icdid.dashboard.presentation.all_notes
 
+import android.widget.Toast
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,6 +28,7 @@ import com.icdid.core.presentation.theme.NoteMarkTheme
 import com.icdid.core.presentation.utils.MobilePreviews
 import com.icdid.core.presentation.utils.ObserveAsEvents
 import com.icdid.core.presentation.utils.TabletPreviews
+import com.icdid.dashboard.domain.NoteId
 import com.icdid.dashboard.presentation.R
 import com.icdid.dashboard.presentation.all_notes.components.UsernameBox
 import com.icdid.dashboard.presentation.components.NoteDialog
@@ -32,26 +39,37 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun AllNotesRoot(
     viewModel: AllNotesViewModel = koinViewModel(),
-    onNavigateToNoteDetail: () -> Unit = {},
+    onNavigateToNoteDetail: (NoteId) -> Unit = {},
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     ObserveAsEvents(viewModel.event) { event ->
+        when (event) {
+            is AllNotesEvent.Error -> {
+                Toast.makeText(context, event.error.asString(context), Toast.LENGTH_LONG).show()
+            }
 
+            is AllNotesEvent.NoteSaved -> onNavigateToNoteDetail(event.id)
+        }
     }
 
     AllNotesScreen(
         state = state,
-        onAction = viewModel::onAction,
-        onNavigateToNoteDetail = onNavigateToNoteDetail,
+        onAction = { action ->
+            when (action) {
+                is AllNotesAction.OnNoteClick -> onNavigateToNoteDetail(action.id)
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        },
     )
 }
 
 @Composable
 fun AllNotesScreen(
     state: AllNotesState,
-    onAction: (AllNotesAction) -> Unit = {},
-    onNavigateToNoteDetail: () -> Unit = {},
+    onAction: (AllNotesAction) -> Unit,
 ) {
     Scaffold(
         contentWindowInsets = WindowInsets.safeDrawing,
@@ -76,7 +94,7 @@ fun AllNotesScreen(
         floatingActionButton = {
             NoteMarkFAB(
                 onClick = {
-                    onNavigateToNoteDetail()
+                    onAction(AllNotesAction.OnCreateNote)
                 }
             )
         },
@@ -86,33 +104,44 @@ fun AllNotesScreen(
 
         val isTablet = deviceType.isTablet()
 
-        when (deviceType) {
-            DeviceType.MOBILE_PORTRAIT, DeviceType.TABLET_PORTRAIT -> AllNotesPortraitView(
-                state = state,
-                onAction = onAction,
+        if (state.isLoading) {
+            Box(
                 modifier = Modifier
                     .padding(innerPadding)
-                    .padding(vertical = 12.dp, horizontal = 12.dp),
-                isTablet = isTablet
-            )
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            when (deviceType) {
+                DeviceType.MOBILE_PORTRAIT, DeviceType.TABLET_PORTRAIT -> AllNotesPortraitView(
+                    state = state,
+                    onAction = onAction,
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .padding(vertical = 12.dp, horizontal = 12.dp),
+                    isTablet = isTablet
+                )
 
-            DeviceType.TABLET_LANDSCAPE, DeviceType.MOBILE_LANDSCAPE -> AllNotesLandscapeView(
-                state = state,
-                onAction = onAction,
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .padding(vertical = 12.dp, horizontal = 12.dp),
-                isTablet = isTablet
-            )
+                DeviceType.TABLET_LANDSCAPE, DeviceType.MOBILE_LANDSCAPE -> AllNotesLandscapeView(
+                    state = state,
+                    onAction = onAction,
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .padding(vertical = 12.dp, horizontal = 12.dp),
+                    isTablet = isTablet
+                )
+            }
         }
 
         NoteDialog(
             showDialog = state.showDeleteDialog,
             onDismiss = {
-                onAction(AllNotesAction.OnLongNoteDisplayDialog)
+                onAction(AllNotesAction.OnLongNoteDisplayDialog(""))
             },
             onConfirm = {
-                // TODO delete note
+                onAction(AllNotesAction.OnDeleteNoteConfirmed)
             },
             title = stringResource(R.string.delete_note),
             content = stringResource(R.string.delete_confirmation),

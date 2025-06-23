@@ -15,4 +15,7 @@
     <string name="delete_confirmation">Are you sure you want to delete this note? This action cannot be undone.</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+
+    <string name="successfully_save_note">success saved Noted</string>
+    <string name="title_cannot_be_empty">Title cannot be empty</string>
 </resources>

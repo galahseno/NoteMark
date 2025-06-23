@@ -11,7 +11,7 @@ import com.icdid.core.presentation.theme.NoteMarkTheme
 import com.icdid.core.presentation.utils.MobilePortrait
 import com.icdid.core.presentation.utils.TabletPortrait
 import com.icdid.dashboard.presentation.all_notes.components.EmptyNotes
-import com.icdid.dashboard.presentation.components.NoteContent
+import com.icdid.dashboard.presentation.all_notes.components.NoteContent
 import com.icdid.dashboard.presentation.model.NotesContentType
 import com.icdid.dashboard.presentation.util.PreviewUtil
 import com.icdid.dashboard.presentation.util.toContentPreview
@@ -37,10 +37,11 @@ fun AllNotesPortraitView(
         ) {
             items(
                 state.notes,
-                key = { it.content },
+                key = { it.id },
             ) {
                 NoteContent(
-                    date = it.date.toDisplayDate(),
+                    id = it.id,
+                    date = it.createdAt.toDisplayDate(),
                     title = it.title,
                     content = it.content.toContentPreview(
                         if (isTablet) NotesContentType.TABLET else NotesContentType.PHONE

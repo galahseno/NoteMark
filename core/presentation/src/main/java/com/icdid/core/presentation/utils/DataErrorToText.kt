@@ -30,6 +30,10 @@ fun DataError.asUiText(): UiText {
             R.string.error_serialization
         )
 
+        DataError.Local.DISK_FULL -> UiText.StringResource(
+            R.string.error_disk_full
+        )
+
         else -> UiText.StringResource(
             R.string.error_unknown
         )

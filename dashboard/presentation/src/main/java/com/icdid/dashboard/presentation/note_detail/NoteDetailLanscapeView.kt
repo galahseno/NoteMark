@@ -10,9 +10,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.icdid.core.presentation.composables.NoteMarkDefaultTextButton
+import com.icdid.core.presentation.theme.NoteMarkTheme
+import com.icdid.core.presentation.utils.MobileLandscape
+import com.icdid.core.presentation.utils.TabletLandscape
 import com.icdid.dashboard.presentation.R
 import com.icdid.dashboard.presentation.note_detail.composables.CloseButton
 import com.icdid.dashboard.presentation.note_detail.composables.NoteFormView
@@ -50,13 +52,18 @@ fun NoteDetailLandscapeView(
 
         NoteMarkDefaultTextButton(
             text = stringResource(R.string.save_note),
-            onClick = { }
+            onClick = {
+                onAction(NoteDetailAction.OnSaveNoteClicked)
+            }
         )
     }
 }
 
-@Preview
+@MobileLandscape
+@TabletLandscape
 @Composable
 fun NoteDetailLandscapeViewPreview() {
-
+    NoteMarkTheme {
+        NoteDetailLandscapeView()
+    }
 }
