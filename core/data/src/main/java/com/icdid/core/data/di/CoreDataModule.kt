@@ -3,6 +3,8 @@ package com.icdid.core.data.di
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
+import androidx.room.Room
+import com.icdid.core.data.database.NoteMarkDatabase
 import com.icdid.core.data.model.AuthInfoSerializable
 import com.icdid.core.data.network.HttpClientFactory
 import com.icdid.core.data.security.AesEncryptionService
@@ -17,6 +19,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 private const val AUTH_PREFERENCES = "auth_preferences"
+private const val DATABASE = "notemark_database"
 
 val coreDataModule = module {
     single { HttpClientFactory(get()).build() }
@@ -38,6 +41,15 @@ val coreDataModule = module {
          **/
         KeyManager.getOrCreateSecretKey("NoteMarkPassphrase".toByteArray())
     }
+
+    single {
+        Room.databaseBuilder(
+            get(),
+            NoteMarkDatabase::class.java, DATABASE
+        ).build()
+    }
+
+    single { get<NoteMarkDatabase>().noteDao() }
 
     singleOf(::EncryptedSessionStorage) bind SessionStorage::class
     singleOf(::AesEncryptionService) bind EncryptionService::class

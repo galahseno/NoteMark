@@ -2,10 +2,8 @@ package com.icdid.dashboard.presentation.note_detail.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
@@ -14,12 +12,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.icdid.core.presentation.theme.LocalNoteMarkTypography
@@ -38,6 +41,21 @@ fun NoteFormView(
     val scrollState = rememberScrollState()
     val horizontalPadding = if(isTablet) 24.dp else 16.dp
 
+    var textState by remember { mutableStateOf(TextFieldValue("")) }
+
+    LaunchedEffect(key1 = state.title) {
+        if(state.title.isNotEmpty()) {
+            textState = TextFieldValue(
+                text = state.title,
+                selection = TextRange(state.title.length)
+            )
+        }
+    }
+
+    LaunchedEffect(key1 = state.content) {
+        scrollState.animateScrollTo(scrollState.maxValue)
+    }
+
     Column(
         modifier = modifier
             .verticalScroll(scrollState)
@@ -51,12 +69,12 @@ fun NoteFormView(
                 )
                 .focusRequester(focusRequester),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-            value = state.title,
+            value = textState,
             onValueChange = {
-                onAction(NoteDetailAction.OnNoteTitleChanged(it))
+                onAction(NoteDetailAction.OnNoteTitleChanged(it.text))
+                textState = it.copy(selection = TextRange(it.text.length))
             },
             decorationBox = { innerTextField ->
-
                 if(state.title.isEmpty()) {
                     Text(
                         text = stringResource(R.string.note_title),
@@ -107,10 +125,6 @@ fun NoteFormView(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         )
-    }
-
-    LaunchedEffect(state.content) {
-        scrollState.animateScrollTo(scrollState.maxValue)
     }
 }
 

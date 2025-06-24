@@ -6,6 +6,7 @@ import com.icdid.core.domain.Result
 import com.icdid.core.presentation.utils.asUiText
 import com.icdid.dashboard.domain.NotesRepository
 import com.icdid.dashboard.domain.model.NoteDomain
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,6 +31,7 @@ class NoteDetailViewModel(
 
     private val _originalTitle = MutableStateFlow("")
     private val _originalContent = MutableStateFlow("")
+    private val _createdAt = MutableStateFlow("")
 
     private val hasChanges = combine(
         state,
@@ -42,18 +44,22 @@ class NoteDetailViewModel(
     private val isEmpty = state.map { it.content.isEmpty() }
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val note = notesRepository.getNote(noteId)
 
-            _originalTitle.value = note.title
-            _originalContent.value = note.content
+            note?.let {
+                _originalTitle.value = note.title
+                _originalContent.value = note.content
+                _createdAt.value = note.createdAt
 
-            _state.update {
-                it.copy(
-                    title = note.title,
-                    content = note.content
-                )
+                _state.update {
+                    it.copy(
+                        title = note.title,
+                        content = note.content
+                    )
+                }
             }
+
         }
     }
 
@@ -69,9 +75,10 @@ class NoteDetailViewModel(
                                 id = noteId,
                                 title = _state.value.title,
                                 content = _state.value.content,
-                                lastEditedAt = timeNow
+                                createdAt = _createdAt.value.ifEmpty { timeNow },
+                                lastEditedAt = timeNow,
                             ),
-                            isUpdate = true
+                            isUpdate = state.value.title != _originalTitle.value || state.value.content != _originalContent.value
                         )) {
                         is Result.Error -> {
                             _event.send(NoteDetailEvent.Error(result.error.asUiText()))

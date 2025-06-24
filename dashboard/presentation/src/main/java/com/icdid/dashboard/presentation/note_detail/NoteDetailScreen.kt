@@ -52,6 +52,7 @@ fun NoteDetailRoot(
 
             NoteDetailEvent.NoteSaved -> {
                 Toast.makeText(context, R.string.successfully_save_note, Toast.LENGTH_LONG).show()
+                onNavigateBack()
             }
         }
     }

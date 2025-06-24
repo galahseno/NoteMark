@@ -9,8 +9,8 @@ typealias NoteId = String
 
 interface LocalDataSource {
     fun getNotes(): Flow<List<NoteDomain>>
-    fun getNote(id: NoteId): NoteDomain
-    fun upsertNote(note: NoteDomain): Result<NoteId, DataError.Local>
+    fun getNote(id: NoteId): NoteDomain?
+    suspend fun upsertNote(note: NoteDomain): Result<NoteId, DataError.Local>
     suspend fun upsertNotes(notes: List<NoteDomain>): Result<List<NoteId>, DataError.Local>
     suspend fun deleteNote(id: NoteId)
     suspend fun deleteAllNotes()
