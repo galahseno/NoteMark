@@ -23,7 +23,7 @@ class NotesRepositoryImpl(
         return localDataSource.getNotes()
     }
 
-    override suspend fun getNote(id: NoteId): NoteDomain {
+    override suspend fun getNote(id: NoteId): NoteDomain? {
         return localDataSource.getNote(id)
     }
 

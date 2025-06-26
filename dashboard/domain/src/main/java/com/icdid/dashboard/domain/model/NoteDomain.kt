@@ -5,5 +5,5 @@ data class NoteDomain(
     val title: String = "New Note",
     val content: String = "",
     val createdAt: String = "",
-    val lastEditedAt: String = ""
+    val lastEditedAt: String = "",
 )

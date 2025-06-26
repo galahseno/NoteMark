@@ -60,10 +60,10 @@ class AllNotesViewModel(
 
         notesRepository
             .getNotes()
-            .onEach {
-                _state.update {
-                    it.copy(
-                        notes = it.notes,
+            .onEach { notes ->
+                _state.update { currentState ->
+                    currentState.copy(
+                        notes = notes,
                         isLoading = false
                     )
                 }

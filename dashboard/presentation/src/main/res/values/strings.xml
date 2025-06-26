@@ -16,6 +16,6 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
 
-    <string name="successfully_save_note">success saved Noted</string>
+    <string name="successfully_save_note">Note successfully saved</string>
     <string name="title_cannot_be_empty">Title cannot be empty</string>
 </resources>
