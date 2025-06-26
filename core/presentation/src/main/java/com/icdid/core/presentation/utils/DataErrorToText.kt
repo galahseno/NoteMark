@@ -11,7 +11,6 @@ fun DataError.asUiText(): UiText {
 
         DataError.Network.TOO_MANY_REQUEST -> UiText.StringResource(
             R.string.error_too_many_request
-
         )
 
         DataError.Network.NO_INTERNET -> UiText.StringResource(

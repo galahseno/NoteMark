@@ -22,6 +22,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowInsetsControllerCompat
 import com.icdid.core.presentation.theme.LocalNoteMarkTypography
@@ -70,6 +74,11 @@ fun NoteMarkDefaultScreen(
                 hostState = snackbarHostState,
                 snackbar = { data ->
                     Snackbar(
+                        modifier = Modifier
+                            .semantics {
+                                this.contentDescription = data.visuals.message
+                                this.liveRegion = LiveRegionMode.Assertive
+                            },
                         containerColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         action = {
                             if (!data.visuals.actionLabel.isNullOrBlank()) {

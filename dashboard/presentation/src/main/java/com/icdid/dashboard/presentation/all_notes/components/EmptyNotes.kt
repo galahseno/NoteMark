@@ -30,14 +30,14 @@ fun EmptyNotes(
         )
         Text(
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
+                .fillMaxWidth(),
             text = stringResource(R.string.empty_notes),
             style = LocalNoteMarkTypography.current.titleSmall.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             ),
         )
+        Spacer(modifier = Modifier.weight(1f))
     }
 }
 

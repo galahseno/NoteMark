@@ -10,4 +10,17 @@
     <string name="error_unknown">An unknown error occurred.</string>
     <string name="notemark">NoteMark</string>
     <string name="save_note">Save note</string>
+    <string name="close">Close</string>
+    <string name="create_note">Create new note</string>
+
+    <!-- region accesibility -->
+    <string name="label"> label</string>
+    <string name="default_text_field_description">Double tap to edit text, double tap and hold to long press, editing options available, use tap with 3 fingers to view</string>
+    <string name="password_label">Password label</string>
+    <string name="default_button_description"> button</string>
+    <string name="user_initials">User initials</string>
+    <string name="show_password">Show password</string>
+    <string name="hide_password">Hide password</string>
+    <string name="double_tap_to_edit">Double tap to edit</string>
+    <!-- end region -->
 </resources>
