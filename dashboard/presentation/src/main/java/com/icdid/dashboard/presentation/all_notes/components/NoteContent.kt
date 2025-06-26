@@ -13,6 +13,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.icdid.core.presentation.theme.LocalNoteMarkTypography
@@ -46,6 +48,9 @@ fun NoteContent(
     ) {
         Column(
             modifier = Modifier
+                .clearAndSetSemantics {
+                    this.contentDescription = title
+                }
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {

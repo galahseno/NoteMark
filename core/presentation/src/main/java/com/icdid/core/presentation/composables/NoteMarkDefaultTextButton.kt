@@ -9,7 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.TextStyle
+import com.icdid.core.presentation.R
 
 @Composable
 fun NoteMarkDefaultTextButton(
@@ -20,9 +24,13 @@ fun NoteMarkDefaultTextButton(
     onClick: () -> Unit = {}
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+    val contentDescription = text + stringResource(R.string.default_button_description)
 
     Box(
         modifier = modifier
+            .clearAndSetSemantics {
+                this.contentDescription = contentDescription
+            }
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,

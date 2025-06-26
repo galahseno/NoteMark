@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -76,6 +77,8 @@ fun AllNotesScreen(
         containerColor = MaterialTheme.colorScheme.surface,
         topBar = {
             NoteMarkTopAppBar(
+                modifier = Modifier
+                    .clearAndSetSemantics {},
                 title = {
                     Text(
                         text = stringResource(com.icdid.core.presentation.R.string.notemark),

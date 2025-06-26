@@ -15,8 +15,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.icdid.core.presentation.R
 import com.icdid.core.presentation.theme.NoteMarkTheme
 import com.icdid.core.presentation.theme.fabBackground
 
@@ -25,6 +29,8 @@ fun NoteMarkFAB(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val contentDescription = stringResource(R.string.create_note)
+
     FloatingActionButton(
         modifier = modifier
             .size(64.dp)
@@ -37,7 +43,10 @@ fun NoteMarkFAB(
                 .fillMaxSize()
                 .background(
                     brush = fabBackground,
-                ),
+                )
+                .clearAndSetSemantics {
+                    this.contentDescription = contentDescription
+                },
             contentAlignment = Alignment.Center
         ) {
             Icon(

@@ -12,9 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.icdid.core.presentation.R
 import com.icdid.core.presentation.theme.LocalNoteMarkTypography
 import com.icdid.core.presentation.theme.NoteMarkTheme
 
@@ -26,8 +30,14 @@ fun NoteMarkOutlinedButton(
     borderColor: Color = MaterialTheme.colorScheme.primary,
     textColor: Color = MaterialTheme.colorScheme.primary,
 ) {
+
+    val contentDescription = text + stringResource(R.string.default_button_description)
+
     Box(
         modifier = modifier
+            .clearAndSetSemantics {
+                this.contentDescription = contentDescription
+            }
             .fillMaxWidth()
             .clip(shape = MaterialTheme.shapes.medium)
             .background(
@@ -60,7 +70,7 @@ private fun NoteMarkOutlinedButtonPreview() {
     NoteMarkTheme {
         NoteMarkOutlinedButton(
             text = "Test",
-            onClick = {}
+            onClick = {},
         )
     }
 }
