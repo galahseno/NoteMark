@@ -83,10 +83,12 @@ fun LandingPortraitView(
                 text = stringResource(R.string.landing_title),
                 style = if (isTablet) {
                     LocalNoteMarkTypography.current.titleXLarge.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.Center
                     )
                 } else {
                     LocalNoteMarkTypography.current.titleLarge.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.Start
                     )
                 }
