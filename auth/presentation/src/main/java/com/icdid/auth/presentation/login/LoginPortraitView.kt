@@ -35,7 +35,7 @@ fun LoginPortraitView(
 
     Column(
         modifier = customModifier,
-        horizontalAlignment = if(isTablet) Alignment.CenterHorizontally else Alignment.Start,
+        horizontalAlignment = if (isTablet) Alignment.CenterHorizontally else Alignment.Start,
     ) {
         LoginTitleView(isTablet = isTablet)
         LoginFormView(
