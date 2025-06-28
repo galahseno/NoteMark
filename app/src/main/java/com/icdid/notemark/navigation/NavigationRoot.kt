@@ -1,5 +1,9 @@
 package com.icdid.notemark.navigation
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -37,10 +41,14 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
     navigation<Screen.Auth>(
         startDestination = Screen.Auth.Landing
     ) {
-        composable<Screen.Auth.Landing> {
+        composable<Screen.Auth.Landing>(
+            exitTransition = {
+                slideOutVertically(targetOffsetY = { -it / 2 }) + fadeOut()
+            },
+        ) {
             LandingScreen(
                 onAction = { action ->
-                    when(action) {
+                    when (action) {
                         LandingAction.OnGettingStartedClicked -> {
                             navController.navigate(Screen.Auth.Register) {
                                 popUpTo(Screen.Auth.Landing) {
@@ -48,6 +56,7 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
                                 }
                             }
                         }
+
                         LandingAction.OnLoginClicked -> {
                             navController.navigate(Screen.Auth.Login) {
                                 popUpTo(Screen.Auth.Landing) {
@@ -59,7 +68,11 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
                 }
             )
         }
-        composable<Screen.Auth.Login> {
+        composable<Screen.Auth.Login>(
+            enterTransition = {
+                slideInVertically(initialOffsetY = { it }) + fadeIn()
+            },
+        ) {
             LoginRoot(
                 onNavigateToRegister = {
                     navController.navigate(Screen.Auth.Register) {
@@ -79,7 +92,11 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
                 },
             )
         }
-        composable<Screen.Auth.Register> {
+        composable<Screen.Auth.Register>(
+            enterTransition = {
+                slideInVertically(initialOffsetY = { it }) + fadeIn()
+            },
+        ) {
             RegisterRoot(
                 onNavigateToLogin = {
                     navController.navigate(Screen.Auth.Login) {
@@ -108,7 +125,11 @@ private fun NavGraphBuilder.homeGraph(navController: NavHostController) {
     navigation<Screen.Home>(
         startDestination = Screen.Home.AllNotes
     ) {
-        composable<Screen.Home.AllNotes> {
+        composable<Screen.Home.AllNotes>(
+            popEnterTransition = {
+                slideInVertically(initialOffsetY = { -it / 2 }) + fadeIn()
+            },
+        ) {
             AllNotesRoot(
                 onNavigateToNoteDetail = {
                     navController.navigate(Screen.Home.NoteDetail(it))
@@ -116,7 +137,14 @@ private fun NavGraphBuilder.homeGraph(navController: NavHostController) {
             )
         }
 
-        composable<Screen.Home.NoteDetail> {
+        composable<Screen.Home.NoteDetail>(
+            enterTransition = {
+                slideInVertically(initialOffsetY = { it })
+            },
+            exitTransition = {
+                slideOutVertically(targetOffsetY = { it })
+            },
+        ) {
             val noteId = it.toRoute<Screen.Home.NoteDetail>().noteId
             NoteDetailRoot(
                 onNavigateBack = {

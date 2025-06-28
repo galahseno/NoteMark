@@ -48,6 +48,7 @@ fun AllNotesPortraitView(
                     ),
                     onAction = onAction,
                     modifier = Modifier
+                        .animateItem()
                 )
             }
         }
