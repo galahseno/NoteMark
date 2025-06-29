@@ -7,10 +7,12 @@
 ## Project Status
 
 This project is divided in 4 different milestones that are launched every fortnight. 
-We are currently working in **milestone 1**
+We are currently working in **milestone 2**
 
 ### 🚨 Latest Features ###
 
+- **Dark Mode and Light Mode**
+  - Change the App Color Scheme based on device theme.
 - **Landing Screen**
   - For the user to choose whether to login or register.
 - **Login Screen**
@@ -19,6 +21,13 @@ We are currently working in **milestone 1**
 - **Register Screen**
   - Manage error handling for username, email and password.
   - Implemented snack bar.
+- **All Notes Screen**
+  - Display list of Note with offline support.
+  - Create new note with default title
+- **Detail Note Screen**
+  - Display detail Note.
+  - Update Note data
+  - Implemented toast for message.
 
 ---
 
@@ -31,6 +40,7 @@ We are currently working in **milestone 1**
 - ✅ Kor Client for Network calls.
 - ✅ Material Design 3 components and theming.
 - ✅ Data Store for user preferences (encrypted with security crypto).
+- ✅ Room for database
 
 ---
 
@@ -38,7 +48,9 @@ We are currently working in **milestone 1**
 
 https://github.com/user-attachments/assets/bf4d1fc4-500b-4f3a-8d5f-ecdddd0a1709
 
-## 📱 Screenshots ##
+https://github.com/user-attachments/assets/29e42c9d-aed6-4323-bd8f-181c4fba5cdd
+
+## 📱 Screenshots (portrait = dark mode || landscape == light mode) ##
 
 ### Landing ###
 
@@ -69,6 +81,26 @@ https://github.com/user-attachments/assets/bf4d1fc4-500b-4f3a-8d5f-ecdddd0a1709
 | Tablet Portrait                                                              | Tablet Landscape                                                               |
 |------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
 | <img src="assets/screenshots/login/login_tablet_portrait.png" width="600" /> | <img src="assets/screenshots/login/login_tablet_landscape.png" width="1200" /> |
+
+### All Notes ###
+
+| Mobile Portrait                                                              | Mobile Landscape                                                               | 
+|------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| <img src="assets/screenshots/home/home_mobile_portrait.png" width="600" /> | <img src="assets/screenshots/home/home_mobile_landscape.png" width="1200" /> | 
+
+| Tablet Portrait                                                              | Tablet Landscape                                                               |
+|------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| <img src="assets/screenshots/home/home_tablet_portrait.png" width="600" /> | <img src="assets/screenshots/home/home_tablet_landscape.png" width="1200" /> |
+
+### Detail Notes ###
+
+| Mobile Portrait                                                              | Mobile Landscape                                                               | 
+|------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| <img src="assets/screenshots/detail/detail_mobile_portrait.png" width="600" /> | <img src="assets/screenshots/detail/detail_mobile_landscape.png" width="1200" /> | 
+
+| Tablet Portrait                                                              | Tablet Landscape                                                               |
+|------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| <img src="assets/screenshots/detail/detail_tablet_portrait.png" width="600" /> | <img src="assets/screenshots/detail/detail_tablet_landscape.png" width="1200" /> |
 
 ---
 
