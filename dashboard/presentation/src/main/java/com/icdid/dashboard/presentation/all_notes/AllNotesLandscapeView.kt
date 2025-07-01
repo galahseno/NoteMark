@@ -48,6 +48,7 @@ fun AllNotesLandscapeView(
                     ),
                     onAction = onAction,
                     modifier = Modifier
+                        .animateItem()
                 )
             }
         }
