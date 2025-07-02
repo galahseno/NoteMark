@@ -7,7 +7,9 @@ android {
 }
 
 dependencies {
-    implementation(projects.dashboard.domain)
-    implementation(projects.core.domain)
-    implementation(projects.core.presentation)
+    with(projects) {
+        implementation(dashboard.domain)
+        implementation(core.domain)
+        implementation(core.presentation)
+    }
 }

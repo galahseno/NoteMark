@@ -27,4 +27,14 @@ class EncryptedSessionStorage(
             )
         }
     }
+
+    override suspend fun clear() {
+        dataStore.updateData {
+            it.copy(
+                accessToken = "",
+                refreshToken = "",
+                username = "",
+            )
+        }
+    }
 }

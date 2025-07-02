@@ -1,25 +1,34 @@
 package com.icdid.dashboard.presentation.all_notes
 
+import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.icdid.core.presentation.composables.NoteMarkDefaultScreen
 import com.icdid.core.presentation.composables.NoteMarkFAB
 import com.icdid.core.presentation.composables.NoteMarkTopAppBar
 import com.icdid.core.presentation.model.DeviceType
@@ -40,6 +49,7 @@ import org.koin.androidx.compose.koinViewModel
 fun AllNotesRoot(
     viewModel: AllNotesViewModel = koinViewModel(),
     onNavigateToNoteDetail: (NoteId) -> Unit = {},
+    onNavigateToSettings: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -59,6 +69,7 @@ fun AllNotesRoot(
         onAction = { action ->
             when (action) {
                 is AllNotesAction.OnNoteClick -> onNavigateToNoteDetail(action.id)
+                is AllNotesAction.OnSettingsClick -> onNavigateToSettings()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -71,10 +82,8 @@ fun AllNotesScreen(
     state: AllNotesState,
     onAction: (AllNotesAction) -> Unit,
 ) {
-    Scaffold(
-        contentWindowInsets = WindowInsets.safeDrawing,
-        containerColor = MaterialTheme.colorScheme.surface,
-        topBar = {
+    NoteMarkDefaultScreen(
+        topAppBar = {
             NoteMarkTopAppBar(
                 title = {
                     Text(
@@ -85,6 +94,14 @@ fun AllNotesScreen(
                     )
                 },
                 actions = {
+                    IconButton(
+                        onClick = { onAction(AllNotesAction.OnSettingsClick) }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Settings"
+                        )
+                    }
                     UsernameBox(
                         modifier = Modifier.padding(end = 16.dp), username = state.username
                     )
@@ -97,8 +114,8 @@ fun AllNotesScreen(
                     onAction(AllNotesAction.OnCreateNote)
                 }
             )
-        },
-    ) { innerPadding ->
+        }
+    ){
         val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
         val deviceType = DeviceType.fromWindowsSizeClass(windowSizeClass)
 
@@ -107,7 +124,6 @@ fun AllNotesScreen(
         if (state.isLoading) {
             Box(
                 modifier = Modifier
-                    .padding(innerPadding)
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
@@ -119,7 +135,6 @@ fun AllNotesScreen(
                     state = state,
                     onAction = onAction,
                     modifier = Modifier
-                        .padding(innerPadding)
                         .padding(vertical = 12.dp, horizontal = 12.dp),
                     isTablet = isTablet
                 )
@@ -128,8 +143,10 @@ fun AllNotesScreen(
                     state = state,
                     onAction = onAction,
                     modifier = Modifier
-                        .padding(innerPadding)
-                        .padding(vertical = 12.dp, horizontal = 12.dp),
+                        .padding(
+                            vertical = 12.dp,
+                            horizontal = 12.dp
+                        ),
                     isTablet = isTablet
                 )
             }

@@ -19,7 +19,6 @@ import com.icdid.core.presentation.utils.TabletPreviews
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-
 @Composable
 fun LoginRoot(
     onNavigateToRegister: () -> Unit,
@@ -75,7 +74,9 @@ fun LoginScreen(
 
     val isTablet = deviceType.isTablet()
 
-    NoteMarkDefaultScreen {
+    NoteMarkDefaultScreen(
+        isFromAuthGraph = true,
+    ) {
         when (deviceType) {
             DeviceType.MOBILE_PORTRAIT, DeviceType.TABLET_PORTRAIT -> LoginPortraitView(
                 isTablet = isTablet,

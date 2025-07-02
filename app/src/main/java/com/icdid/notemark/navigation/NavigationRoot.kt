@@ -19,6 +19,7 @@ import com.icdid.auth.presentation.login.LoginRoot
 import com.icdid.auth.presentation.register.RegisterRoot
 import com.icdid.dashboard.presentation.all_notes.AllNotesRoot
 import com.icdid.dashboard.presentation.note_detail.NoteDetailRoot
+import com.icdid.dashboard.presentation.settings.SettingsRoot
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -133,6 +134,9 @@ private fun NavGraphBuilder.homeGraph(navController: NavHostController) {
             AllNotesRoot(
                 onNavigateToNoteDetail = {
                     navController.navigate(Screen.Home.NoteDetail(it))
+                },
+                onNavigateToSettings = {
+                    navController.navigate(Screen.Home.Settings)
                 }
             )
         }
@@ -153,6 +157,19 @@ private fun NavGraphBuilder.homeGraph(navController: NavHostController) {
                 viewModel = koinViewModel(
                     parameters = { parametersOf(noteId) }
                 )
+            )
+        }
+
+        composable<Screen.Home.Settings> {
+            SettingsRoot(
+                onNavigateToLogin = {
+                    navController.navigate(Screen.Auth.Login) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                onNavigateBack = {
+                    navController.navigateUp()
+                }
             )
         }
     }

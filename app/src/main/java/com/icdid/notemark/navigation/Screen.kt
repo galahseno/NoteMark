@@ -25,5 +25,8 @@ sealed class Screen {
         data class NoteDetail(
             val noteId: String
         )
+
+        @Serializable
+        data object Settings
     }
 }

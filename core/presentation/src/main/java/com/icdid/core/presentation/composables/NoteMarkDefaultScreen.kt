@@ -3,8 +3,10 @@ package com.icdid.core.presentation.composables
 import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -32,7 +34,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun NoteMarkDefaultScreen(
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    isFromAuthGraph: Boolean = false,
+    floatingActionButton: @Composable () -> Unit = {},
+    topAppBar: @Composable () -> Unit = {},
+    content: @Composable () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -63,6 +68,9 @@ fun NoteMarkDefaultScreen(
     }
 
     Scaffold(
+        contentWindowInsets = WindowInsets.safeDrawing,
+        topBar = topAppBar,
+        floatingActionButton = floatingActionButton,
         snackbarHost = {
             SnackbarHost(
                 modifier = Modifier
@@ -96,22 +104,29 @@ fun NoteMarkDefaultScreen(
                 }
             )
         },
-        containerColor = MaterialTheme.colorScheme.primary
+        containerColor = if(isFromAuthGraph) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
     ) { innerPadding ->
 
         val view = LocalView.current
         val paddingTop = innerPadding.calculateTopPadding() + 8.dp
+        val authStatusBarColor = MaterialTheme.colorScheme.surfaceContainerLowest
 
         Box(
             modifier = modifier
                 .padding(top = paddingTop)
                 .fillMaxSize()
-                .background(
-                    color = MaterialTheme.colorScheme.surfaceContainerLowest,
-                    shape = RoundedCornerShape(
-                        topStart = 20.dp,
-                        topEnd = 20.dp
-                    )
+                .then(
+                    if(isFromAuthGraph) {
+                        Modifier.background(
+                            color = authStatusBarColor,
+                            shape = RoundedCornerShape(
+                                topStart = 20.dp,
+                                topEnd = 20.dp
+                            )
+                        )
+                    } else {
+                        Modifier
+                    }
                 )
         ) {
             content()
