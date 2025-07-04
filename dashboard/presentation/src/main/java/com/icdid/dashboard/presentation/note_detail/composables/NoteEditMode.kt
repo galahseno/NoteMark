@@ -36,12 +36,18 @@ fun NoteFormView(
     isTablet: Boolean = false,
     state: NoteDetailState = NoteDetailState(),
     onAction: (NoteDetailAction) -> Unit = {},
-    focusRequester: FocusRequester = remember { FocusRequester() }
 ) {
     val scrollState = rememberScrollState()
     val horizontalPadding = if(isTablet) 24.dp else 16.dp
 
     var textState by remember { mutableStateOf(TextFieldValue("")) }
+
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
 
     LaunchedEffect(key1 = state.title) {
         if(state.title.isNotEmpty()) {
@@ -128,7 +134,7 @@ fun NoteFormView(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun NoteFormViewPrev() {
     NoteFormView()

@@ -11,13 +11,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CloseButton(
+fun NavigationButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
+    icon: ImageVector =Icons.Default.Close,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -31,7 +33,7 @@ fun CloseButton(
             ),
     ) {
         Icon(
-            imageVector = Icons.Default.Close,
+            imageVector = icon,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -41,5 +43,5 @@ fun CloseButton(
 @Preview
 @Composable
 private fun CloseButtonPreview() {
-    CloseButton()
+    NavigationButton()
 }

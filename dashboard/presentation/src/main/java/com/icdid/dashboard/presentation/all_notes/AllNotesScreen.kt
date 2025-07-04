@@ -1,32 +1,24 @@
 package com.icdid.dashboard.presentation.all_notes
 
-import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.icdid.core.presentation.composables.NoteMarkDefaultScreen
 import com.icdid.core.presentation.composables.NoteMarkFAB
@@ -50,6 +42,7 @@ fun AllNotesRoot(
     viewModel: AllNotesViewModel = koinViewModel(),
     onNavigateToNoteDetail: (NoteId) -> Unit = {},
     onNavigateToSettings: () -> Unit = {},
+    onSuccessSavedNoted: (NoteId) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -60,7 +53,7 @@ fun AllNotesRoot(
                 Toast.makeText(context, event.error.asString(context), Toast.LENGTH_LONG).show()
             }
 
-            is AllNotesEvent.NoteSaved -> onNavigateToNoteDetail(event.id)
+            is AllNotesEvent.NoteSaved -> onSuccessSavedNoted(event.id)
         }
     }
 

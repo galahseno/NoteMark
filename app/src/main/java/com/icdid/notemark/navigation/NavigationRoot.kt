@@ -12,7 +12,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import androidx.navigation.toRoute
 import com.icdid.auth.presentation.landing.LandingAction
 import com.icdid.auth.presentation.landing.LandingScreen
 import com.icdid.auth.presentation.login.LoginRoot
@@ -20,8 +19,6 @@ import com.icdid.auth.presentation.register.RegisterRoot
 import com.icdid.dashboard.presentation.all_notes.AllNotesRoot
 import com.icdid.dashboard.presentation.note_detail.NoteDetailRoot
 import com.icdid.dashboard.presentation.settings.SettingsRoot
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun NavigationRoot(
@@ -133,10 +130,13 @@ private fun NavGraphBuilder.homeGraph(navController: NavHostController) {
         ) {
             AllNotesRoot(
                 onNavigateToNoteDetail = {
-                    navController.navigate(Screen.Home.NoteDetail(it))
+                    navController.navigate(Screen.Home.NoteDetail(noteId = it))
                 },
                 onNavigateToSettings = {
                     navController.navigate(Screen.Home.Settings)
+                },
+                onSuccessSavedNoted = {
+                    navController.navigate(Screen.Home.NoteDetail(isNewNote = true, noteId = it))
                 }
             )
         }
@@ -149,14 +149,10 @@ private fun NavGraphBuilder.homeGraph(navController: NavHostController) {
                 slideOutVertically(targetOffsetY = { it })
             },
         ) {
-            val noteId = it.toRoute<Screen.Home.NoteDetail>().noteId
             NoteDetailRoot(
                 onNavigateBack = {
                     navController.navigateUp()
-                },
-                viewModel = koinViewModel(
-                    parameters = { parametersOf(noteId) }
-                )
+                }
             )
         }
 

@@ -33,6 +33,8 @@ class RoomLocalDataSource(
                 id = id,
                 title = title,
                 content = content,
+                createdAt = createdAt,
+                lastEditedAt = lastEditedAt,
             )
         }
     }
