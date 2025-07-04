@@ -25,6 +25,7 @@ sealed class NoteMarkTypography(
     val titleXLarge: TextStyle,
     val titleLarge: TextStyle,
     val titleSmall: TextStyle,
+    val titleXSmall: TextStyle,
     val titleMedium: TextStyle,
     val bodyLarge: TextStyle,
     val bodyMedium: TextStyle,
@@ -55,6 +56,12 @@ internal data object MainTypography : NoteMarkTypography(
         fontFamily = SpaceGrotesk,
         fontWeight = FontWeight.Medium,
         fontSize = 17.sp,
+        lineHeight = 24.sp,
+    ),
+    titleXSmall = TextStyle(
+        fontFamily = SpaceGrotesk,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
         lineHeight = 24.sp,
     ),
     bodyLarge = TextStyle(

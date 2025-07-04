@@ -3,6 +3,7 @@ package com.icdid.dashboard.data
 import com.icdid.core.domain.DataError
 import com.icdid.core.domain.EmptyResult
 import com.icdid.core.domain.Result
+import com.icdid.core.domain.SessionStorage
 import com.icdid.core.domain.asEmptyDataResult
 import com.icdid.core.domain.map
 import com.icdid.dashboard.domain.LocalDataSource
@@ -13,11 +14,13 @@ import com.icdid.dashboard.domain.model.NoteDomain
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 class NotesRepositoryImpl(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
-    private val applicationScope: CoroutineScope
+    private val applicationScope: CoroutineScope,
+    private val sessionStorage: SessionStorage
 ) : NotesRepository {
     override fun getNotes(): Flow<List<NoteDomain>> {
         return localDataSource.getNotes()
@@ -75,7 +78,16 @@ class NotesRepositoryImpl(
     }
 
     override suspend fun logout(): EmptyResult<DataError.Network> {
-        // TODO logout (not in milestone 2)
+        val remoteResult = applicationScope.async {
+            remoteDataSource.logout(sessionStorage.get().first().refreshToken)
+        }.await()
+
+        if(remoteResult is Result.Error) {
+            return remoteResult.asEmptyDataResult()
+        } else {
+            localDataSource.deleteAllNotes()
+            sessionStorage.clear()
+        }
         return Result.Success(Unit)
     }
 }

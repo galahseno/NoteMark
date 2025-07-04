@@ -88,7 +88,9 @@ fun RegisterScreen(
 
     val isTablet = deviceType.isTablet()
 
-    NoteMarkDefaultScreen {
+    NoteMarkDefaultScreen(
+        isFromAuthGraph = true,
+    ) {
         when (deviceType) {
             DeviceType.MOBILE_PORTRAIT, DeviceType.TABLET_PORTRAIT -> RegisterPortraitView(
                 isTablet = isTablet,

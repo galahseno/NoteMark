@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface SessionStorage {
     fun get(): Flow<AuthInfo>
     suspend fun set(info: AuthInfo)
+    suspend fun clear()
 }
