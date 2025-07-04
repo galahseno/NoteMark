@@ -23,6 +23,7 @@ sealed class Screen {
 
         @Serializable
         data class NoteDetail(
+            val isNewNote: Boolean = false,
             val noteId: String
         )
 

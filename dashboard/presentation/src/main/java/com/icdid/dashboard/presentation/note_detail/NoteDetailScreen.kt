@@ -5,14 +5,12 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -21,8 +19,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.icdid.core.presentation.model.DeviceType
 import com.icdid.core.presentation.theme.NoteMarkTheme
 import com.icdid.core.presentation.utils.ObserveAsEvents
+import com.icdid.core.presentation.utils.UiText
 import com.icdid.dashboard.presentation.R
 import com.icdid.dashboard.presentation.components.NoteDialog
+import com.icdid.dashboard.presentation.note_detail.composables.NoteDetailModeFAB
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -38,7 +38,7 @@ fun NoteDetailRoot(
         viewModel.onAction(NoteDetailAction.OnCloseClicked)
     }
 
-    ObserveAsEvents(viewModel.event) {event ->
+    ObserveAsEvents(viewModel.event) { event ->
         keyboardController?.hide()
 
         when (event) {
@@ -71,13 +71,18 @@ fun NoteDetailScreen(
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val deviceType = DeviceType.fromWindowsSizeClass(windowSizeClass)
     val isTablet = deviceType.isTablet()
-    val focusRequester = remember { FocusRequester() }
 
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-    }
-
-    Scaffold { innerPadding ->
+    Scaffold(
+        floatingActionButton = {
+            if (!state.isNewNote) {
+                NoteDetailModeFAB(
+                    noteDetailMode = state.noteMode,
+                    onAction = onAction,
+                )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.Center,
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -88,13 +93,12 @@ fun NoteDetailScreen(
                     isTablet = isTablet,
                     state = state,
                     onAction = onAction,
-                    focusRequester = focusRequester
                 )
 
                 DeviceType.TABLET_LANDSCAPE, DeviceType.MOBILE_LANDSCAPE -> NoteDetailLandscapeView(
+                    isTablet = isTablet,
                     state = state,
                     onAction = onAction,
-                    focusRequester = focusRequester
                 )
             }
         }
@@ -117,10 +121,15 @@ fun NoteDetailScreen(
 
 @Preview
 @Composable
-fun NoteDetailScreenPreview(modifier: Modifier = Modifier) {
+fun NoteDetailScreenPreview() {
     NoteMarkTheme {
         NoteDetailScreen(
-            state = NoteDetailState(),
+            state = NoteDetailState(
+                title = "Note Title",
+                createdAt = UiText.DynamicString("2021-01-01"),
+                lastEditedAt = UiText.DynamicString("2021-01-01"),
+                content = "Note Content"
+            ),
             onAction = {}
         )
     }

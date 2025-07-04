@@ -2,6 +2,7 @@ package com.icdid.core.presentation.composables
 
 import android.app.Activity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -104,7 +105,7 @@ fun NoteMarkDefaultScreen(
                 }
             )
         },
-        containerColor = if(isFromAuthGraph) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
+        containerColor = if (isFromAuthGraph) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
     ) { innerPadding ->
 
         val view = LocalView.current
@@ -116,7 +117,7 @@ fun NoteMarkDefaultScreen(
                 .padding(top = paddingTop)
                 .fillMaxSize()
                 .then(
-                    if(isFromAuthGraph) {
+                    if (isFromAuthGraph) {
                         Modifier.background(
                             color = authStatusBarColor,
                             shape = RoundedCornerShape(
@@ -132,11 +133,12 @@ fun NoteMarkDefaultScreen(
             content()
         }
 
+        val useDarkTheme = isSystemInDarkTheme()
         SideEffect {
             val window = (view.context as? Activity)?.window
             if (!view.isInEditMode && window != null) {
                 WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars =
-                    false
+                    if (isFromAuthGraph) false else !useDarkTheme
             }
         }
     }

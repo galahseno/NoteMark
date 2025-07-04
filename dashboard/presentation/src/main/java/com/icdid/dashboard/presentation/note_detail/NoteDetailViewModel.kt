@@ -1,11 +1,15 @@
 package com.icdid.dashboard.presentation.note_detail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.icdid.core.domain.Result
 import com.icdid.core.presentation.utils.asUiText
 import com.icdid.dashboard.domain.NotesRepository
 import com.icdid.dashboard.domain.model.NoteDomain
+import com.icdid.dashboard.presentation.note_detail.NoteDetailEvent.Error
+import com.icdid.dashboard.presentation.note_detail.model.NoteDetailMode
+import com.icdid.dashboard.presentation.util.formatDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,9 +24,12 @@ import java.time.Instant
 import java.time.format.DateTimeFormatter
 
 class NoteDetailViewModel(
-    private val noteId: String,
+    private val savedStateHandle: SavedStateHandle,
     private val notesRepository: NotesRepository
 ) : ViewModel() {
+    private val noteId = savedStateHandle.get<String>("noteId") ?: ""
+    private val isNewNote = savedStateHandle.get<Boolean>("isNewNote") ?: false
+
     private val _state = MutableStateFlow(NoteDetailState())
     val state = _state.asStateFlow()
 
@@ -55,7 +62,11 @@ class NoteDetailViewModel(
                 _state.update {
                     it.copy(
                         title = note.title,
-                        content = note.content
+                        content = note.content,
+                        createdAt = note.createdAt.formatDate(),
+                        lastEditedAt = note.lastEditedAt.formatDate(),
+                        noteMode = if (isNewNote) NoteDetailMode.EDIT else NoteDetailMode.VIEW,
+                        isNewNote = isNewNote
                     )
                 }
             }
@@ -81,7 +92,7 @@ class NoteDetailViewModel(
                             isUpdate = state.value.title != _originalTitle.value || state.value.content != _originalContent.value
                         )) {
                         is Result.Error -> {
-                            _event.send(NoteDetailEvent.Error(result.error.asUiText()))
+                            _event.send(Error(result.error.asUiText()))
                         }
 
                         is Result.Success -> {
@@ -134,6 +145,14 @@ class NoteDetailViewModel(
                 handleEmptyNoteCleanup()
                 viewModelScope.launch {
                     _event.send(NoteDetailEvent.OnDiscardChanges)
+                }
+            }
+
+            is NoteDetailAction.OnChangeMode -> {
+                _state.update { currentState ->
+                    currentState.copy(
+                        noteMode = action.detailMode,
+                    )
                 }
             }
         }

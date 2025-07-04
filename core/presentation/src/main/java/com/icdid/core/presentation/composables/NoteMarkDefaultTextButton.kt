@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 
 @Composable
@@ -17,6 +18,7 @@ fun NoteMarkDefaultTextButton(
     text: String,
     uppercase: Boolean = false,
     style: TextStyle = MaterialTheme.typography.titleSmall,
+    textColor: Color = MaterialTheme.colorScheme.primary,
     onClick: () -> Unit = {}
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -31,9 +33,9 @@ fun NoteMarkDefaultTextButton(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = if(uppercase) text.uppercase() else text,
+            text = if (uppercase) text.uppercase() else text,
             style = style.copy(
-                color = MaterialTheme.colorScheme.primary,
+                color = textColor
             )
         )
     }

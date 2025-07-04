@@ -1,8 +1,12 @@
 package com.icdid.dashboard.presentation.util
 
+import com.icdid.core.presentation.utils.UiText
+import com.icdid.dashboard.presentation.R
 import com.icdid.dashboard.presentation.model.NotesContentType
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -60,5 +64,20 @@ fun String.toContentPreview(deviceType: NotesContentType): String {
         this
     } else {
         this.substring(0, limit - 1) + "…"
+    }
+}
+
+fun String.formatDate(): UiText {
+    val instant = Instant.parse(this)
+    val now = Instant.now()
+
+    val duration = Duration.between(instant, now)
+
+    return if (duration.toMinutes() < 5) {
+        UiText.StringResource(R.string.just_now)
+    } else {
+        val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm")
+        val localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
+        UiText.DynamicString(localDateTime.format(formatter))
     }
 }
