@@ -77,7 +77,7 @@ private fun NoteContentPreview() {
         NoteContent(
             id = "1",
             date = "2024-04-19T08:30:00.000Z".toDisplayDate(),
-            title = "Sample Note",
+            title = "Sample Note Sample Note Sample Note Sample Note",
             content = "This is a sample note content. This is a sample note content. This is a sample note content. This is a sample note content. This is a sample note content. This is a sample note content. This is a sample note content. This is a sample note content. This is a sample note content. This is a sample note content. This is a sample note content. This is a sample note content. This is a sample note content."
                 .toContentPreview(NotesContentType.TABLET),
             onAction = {

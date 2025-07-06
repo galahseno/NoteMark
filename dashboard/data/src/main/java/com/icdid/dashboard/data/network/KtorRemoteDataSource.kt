@@ -22,7 +22,7 @@ import io.ktor.http.HttpMethod
 
 class KtorRemoteDataSource(
     private val httpClient: HttpClient
-): RemoteDataSource {
+) : RemoteDataSource {
     override suspend fun getNotes(): Result<List<NoteDomain>, DataError.Network> {
         return httpClient.get<NotesResponseDto>(
             route = "/notes",
@@ -53,10 +53,11 @@ class KtorRemoteDataSource(
     }
 
     override suspend fun logout(refreshToken: String): EmptyResult<DataError.Network> {
-        httpClient.authProvider<BearerAuthProvider>()?.clearToken()
-        return httpClient.post<LogOutRequest, Unit>(
+        val result = httpClient.post<LogOutRequest, Unit>(
             route = "/auth/logout",
             body = LogOutRequest(refreshToken),
         )
+        httpClient.authProvider<BearerAuthProvider>()?.clearToken()
+        return result
     }
 }

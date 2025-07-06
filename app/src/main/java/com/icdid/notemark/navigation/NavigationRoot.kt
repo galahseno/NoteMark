@@ -6,12 +6,14 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import com.icdid.auth.presentation.landing.LandingAction
 import com.icdid.auth.presentation.landing.LandingScreen
 import com.icdid.auth.presentation.login.LoginRoot
@@ -37,19 +39,31 @@ fun NavigationRoot(
 
 private fun NavGraphBuilder.authGraph(navController: NavHostController) {
     navigation<Screen.Auth>(
-        startDestination = Screen.Auth.Landing
+        startDestination = Screen.Auth.Landing()
     ) {
         composable<Screen.Auth.Landing>(
             exitTransition = {
                 slideOutVertically(targetOffsetY = { -it / 2 }) + fadeOut()
             },
         ) {
+            val navArgs = it.toRoute<Screen.Auth.Landing>()
+
+            LaunchedEffect(Unit) {
+                if (navArgs.isSkipped) {
+                    navController.navigate(Screen.Auth.Login) {
+                        popUpTo<Screen.Auth.Landing> {
+                            inclusive = true
+                        }
+                    }
+                }
+            }
+
             LandingScreen(
                 onAction = { action ->
                     when (action) {
                         LandingAction.OnGettingStartedClicked -> {
                             navController.navigate(Screen.Auth.Register) {
-                                popUpTo(Screen.Auth.Landing) {
+                                popUpTo<Screen.Auth.Landing> {
                                     inclusive = true
                                 }
                             }
@@ -57,7 +71,7 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
 
                         LandingAction.OnLoginClicked -> {
                             navController.navigate(Screen.Auth.Login) {
-                                popUpTo(Screen.Auth.Landing) {
+                                popUpTo<Screen.Auth.Landing> {
                                     inclusive = true
                                 }
                             }
@@ -159,8 +173,9 @@ private fun NavGraphBuilder.homeGraph(navController: NavHostController) {
         composable<Screen.Home.Settings> {
             SettingsRoot(
                 onNavigateToLogin = {
-                    navController.navigate(Screen.Auth.Login) {
+                    navController.navigate(Screen.Auth.Landing(isSkipped = true)) {
                         popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
                     }
                 },
                 onNavigateBack = {

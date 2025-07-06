@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
@@ -58,15 +59,6 @@ fun NoteDetailRoot(
             is NoteDetailEvent.Error -> {
                 Toast.makeText(context, event.error.asString(context), Toast.LENGTH_LONG).show()
             }
-
-            NoteDetailEvent.NoteSaved -> {
-                Toast.makeText(context, R.string.successfully_save_note, Toast.LENGTH_LONG).show()
-                onNavigateBack()
-            }
-
-            NoteDetailEvent.OnCountdownFinished -> {
-                onNavigateBack()
-            }
         }
     }
 
@@ -96,7 +88,7 @@ fun NoteDetailScreen(
 
     Scaffold(
         floatingActionButton = {
-            if (!state.isNewNote) {
+            if (state.noteMode != NoteDetailMode.EDIT) {
                 FadeVisibilityComponent(
                     isVisible = state.areUiElementsVisible,
                 ) {
@@ -109,6 +101,7 @@ fun NoteDetailScreen(
             }
         },
         floatingActionButtonPosition = FabPosition.Center,
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
     ) { innerPadding ->
         Column(
             modifier = Modifier

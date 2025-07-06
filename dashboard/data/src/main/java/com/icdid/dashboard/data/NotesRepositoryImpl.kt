@@ -85,8 +85,10 @@ class NotesRepositoryImpl(
         if(remoteResult is Result.Error) {
             return remoteResult.asEmptyDataResult()
         } else {
-            localDataSource.deleteAllNotes()
-            sessionStorage.clear()
+            applicationScope.async {
+                localDataSource.deleteAllNotes()
+                sessionStorage.clear()
+            }.await()
         }
         return Result.Success(Unit)
     }

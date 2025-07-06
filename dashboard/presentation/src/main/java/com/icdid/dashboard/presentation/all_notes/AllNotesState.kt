@@ -6,5 +6,5 @@ data class AllNotesState(
     val username: String = "",
     val notes: List<NoteDomain> = emptyList(),
     val showDeleteDialog: Boolean = false,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = true
 )
