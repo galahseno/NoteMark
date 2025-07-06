@@ -24,7 +24,7 @@ fun AllNotesPortraitView(
     modifier: Modifier = Modifier,
     isTablet: Boolean = false
 ) {
-    if (state.notes.isEmpty()) {
+    if (state.notes.isEmpty() && !state.isLoading) {
         EmptyNotes(
             modifier = modifier
         )

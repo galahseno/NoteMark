@@ -7,7 +7,9 @@ sealed class Screen {
     @Serializable
     data object Auth {
         @Serializable
-        data object Landing
+        data class Landing(
+            val isSkipped: Boolean = false
+        )
 
         @Serializable
         data object Login

@@ -16,9 +16,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,11 +23,11 @@ import java.time.Instant
 import java.time.format.DateTimeFormatter
 
 class NoteDetailViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val notesRepository: NotesRepository
 ) : ViewModel() {
-    private val noteId = savedStateHandle.get<String>("noteId") ?: ""
-    private val isNewNote = savedStateHandle.get<Boolean>("isNewNote") ?: false
+    private val noteId = savedStateHandle.get<String>(NOTE_ID_KEY) ?: ""
+    private val isNewNote = savedStateHandle.get<Boolean>(NEW_NOTE_KEY) ?: false
 
     private val _state = MutableStateFlow(NoteDetailState())
     val state = _state.asStateFlow()
@@ -38,132 +35,47 @@ class NoteDetailViewModel(
     private val _event = Channel<NoteDetailEvent>()
     val event = _event.receiveAsFlow()
 
+    private var _originalNote: NoteDomain? = null
     private var countdownJob: Job? = null
 
-    private val _originalTitle = MutableStateFlow("")
-    private val _originalContent = MutableStateFlow("")
-    private val _createdAt = MutableStateFlow("")
-
-    private val hasChanges = combine(
-        state,
-        _originalTitle,
-        _originalContent
-    ) { currentState, originalTitle, originalContent ->
-        currentState.title != originalTitle || currentState.content != originalContent
+    init {
+        loadNote()
     }
 
-    private val isEmpty = state.map { it.content.isEmpty() }
-
-    init {
+    private fun loadNote() {
         viewModelScope.launch(Dispatchers.IO) {
             val note = notesRepository.getNote(noteId)
+            _originalNote = note
 
             note?.let {
-                _originalTitle.value = note.title
-                _originalContent.value = note.content
-                _createdAt.value = note.createdAt
-
-                _state.update {
-                    it.copy(
-                        title = note.title,
-                        content = note.content,
+                _state.update { currentState ->
+                    currentState.copy(
+                        title = savedStateHandle[NOTE_TITLE_KEY] ?: note.title,
+                        content = savedStateHandle[NOTE_CONTENT_KEY] ?: note.content,
                         createdAt = note.createdAt.formatDate(),
                         lastEditedAt = note.lastEditedAt.formatDate(),
-                        noteMode = if (isNewNote) NoteDetailMode.EDIT else NoteDetailMode.VIEW,
+                        noteMode = NoteDetailMode.valueOf(
+                            savedStateHandle[NOTE_MODE_KEY]
+                                ?: if (isNewNote) NoteDetailMode.EDIT.name else NoteDetailMode.VIEW.name
+                        ),
                         isNewNote = isNewNote
                     )
                 }
             }
-
         }
     }
 
     fun onAction(action: NoteDetailAction) {
         when (action) {
-            is NoteDetailAction.OnSaveNoteClicked -> {
-                viewModelScope.launch {
-                    val timeNow = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
-
-                    when (
-                        val result = notesRepository.upsertNote(
-                            note = NoteDomain(
-                                id = noteId,
-                                title = _state.value.title,
-                                content = _state.value.content,
-                                createdAt = _createdAt.value.ifEmpty { timeNow },
-                                lastEditedAt = timeNow,
-                            ),
-                            isUpdate = state.value.title != _originalTitle.value || state.value.content != _originalContent.value
-                        )) {
-                        is Result.Error -> {
-                            _event.send(Error(result.error.asUiText()))
-                        }
-
-                        is Result.Success -> {
-                            _originalTitle.value = _state.value.title
-                            _originalContent.value = _state.value.content
-                            _event.send(NoteDetailEvent.NoteSaved)
-                        }
-                    }
-                }
-            }
-
-            is NoteDetailAction.OnNoteTitleChanged -> {
-                _state.update { currentState ->
-                    currentState.copy(
-                        title = action.title,
-                    )
-                }
-            }
-
-            is NoteDetailAction.OnNoteContentChanged -> {
-                _state.update { currentState ->
-                    currentState.copy(
-                        content = action.content,
-                    )
-                }
-            }
-
-            is NoteDetailAction.OnCloseClicked -> {
-                viewModelScope.launch {
-                    if (hasChanges.first()) {
-                        _state.update { currentState ->
-                            currentState.copy(isSaveNoteDialogVisible = true)
-                        }
-                    } else {
-                        handleEmptyNoteCleanup()
-                        _event.send(NoteDetailEvent.OnDiscardChanges)
-                    }
-                }
-            }
-
-            is NoteDetailAction.OnConfirmationDialogDismissed -> {
-                _state.update { currentState ->
-                    currentState.copy(
-                        isSaveNoteDialogVisible = false,
-                    )
-                }
-            }
-
-            NoteDetailAction.OnConfirmationDialogConfirmed -> {
-                handleEmptyNoteCleanup()
-                viewModelScope.launch {
-                    _event.send(NoteDetailEvent.OnDiscardChanges)
-                }
-            }
-
-            is NoteDetailAction.OnChangeMode -> {
-                stopCountdown()
-                _state.update { currentState ->
-                    currentState.copy(
-                        noteMode = action.detailMode,
-                        areUiElementsVisible = action.detailMode != NoteDetailMode.READ
-                    )
-                }
-            }
-
+            is NoteDetailAction.OnSaveNoteClicked -> saveNote()
+            is NoteDetailAction.OnNoteTitleChanged -> updateTitle(action.title)
+            is NoteDetailAction.OnNoteContentChanged -> updateContent(action.content)
+            is NoteDetailAction.OnCloseClicked -> handleClose()
+            is NoteDetailAction.OnConfirmationDialogDismissed -> dismissDialog()
+            is NoteDetailAction.OnConfirmationDialogConfirmed -> confirmDiscardChanges()
+            is NoteDetailAction.OnChangeMode -> changeMode(action.detailMode)
             NoteDetailAction.OnReadModeTap -> {
-                if(!_state.value.areUiElementsVisible) {
+                if (!_state.value.areUiElementsVisible) {
                     startCountdown()
                 } else {
                     stopCountdown()
@@ -185,19 +97,133 @@ class NoteDetailViewModel(
         }
     }
 
-    private fun handleEmptyNoteCleanup() {
+    private fun saveNote() {
         viewModelScope.launch {
-            if (isEmpty.first()) {
-                notesRepository.deleteNote(noteId)
+            val currentState = _state.value
+            val timeNow = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
+            val hasChanges = hasUnsavedChanges()
+
+            val result = notesRepository.upsertNote(
+                note = NoteDomain(
+                    id = noteId,
+                    title = currentState.title,
+                    content = currentState.content,
+                    createdAt = _originalNote?.createdAt ?: timeNow,
+                    lastEditedAt = timeNow,
+                ),
+                isUpdate = hasChanges
+            )
+
+            when (result) {
+                is Result.Error -> {
+                    _event.send(Error(result.error.asUiText()))
+                }
+
+                is Result.Success -> {
+                    _originalNote = _originalNote?.copy(
+                        title = currentState.title,
+                        content = currentState.content,
+                        lastEditedAt = timeNow
+                    )
+                    _state.update {
+                        it.copy(
+                            noteMode = NoteDetailMode.VIEW,
+                            lastEditedAt = timeNow.formatDate()
+                        )
+                    }
+                }
             }
         }
+    }
+
+    private fun updateTitle(title: String) {
+        savedStateHandle[NOTE_TITLE_KEY] = title
+        _state.update { it.copy(title = title) }
+    }
+
+    private fun updateContent(content: String) {
+        savedStateHandle[NOTE_CONTENT_KEY] = content
+        _state.update { it.copy(content = content) }
+    }
+
+    private fun handleClose() {
+        viewModelScope.launch {
+            when (_state.value.noteMode) {
+                NoteDetailMode.VIEW, NoteDetailMode.READ -> {
+                    _event.send(NoteDetailEvent.OnDiscardChanges)
+                }
+
+                NoteDetailMode.EDIT -> {
+                    if (hasUnsavedChanges()) {
+                        showSaveDialog()
+                    } else {
+                        if (_state.value.isNewNote) {
+                            deleteNote()
+                            _event.send(NoteDetailEvent.OnDiscardChanges)
+                        } else {
+                            _state.update { it.copy(noteMode = NoteDetailMode.VIEW) }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun dismissDialog() {
+        _state.update { it.copy(isSaveNoteDialogVisible = false) }
+    }
+
+    private fun confirmDiscardChanges() {
+        if (_state.value.isNewNote) {
+            deleteNote()
+            _event.trySend(NoteDetailEvent.OnDiscardChanges)
+        } else {
+            _originalNote?.let { original ->
+                _state.update {
+                    it.copy(
+                        noteMode = NoteDetailMode.VIEW,
+                        title = original.title,
+                        content = original.content
+                    )
+                }
+            }
+            dismissDialog()
+        }
+    }
+
+    private fun changeMode(mode: NoteDetailMode) {
+        savedStateHandle[NOTE_MODE_KEY] = mode.name
+        stopCountdown()
+        _state.update {
+            it.copy(
+                noteMode = mode,
+                areUiElementsVisible = mode != NoteDetailMode.READ
+            )
+        }
+    }
+
+    private fun showSaveDialog() {
+        _state.update { it.copy(isSaveNoteDialogVisible = true) }
+    }
+
+    private fun deleteNote() {
+        viewModelScope.launch {
+            notesRepository.deleteNote(noteId)
+        }
+    }
+
+    private fun hasUnsavedChanges(): Boolean {
+        val currentState = _state.value
+        return _originalNote?.let { original ->
+            currentState.title != original.title || currentState.content != original.content
+        } ?: false
     }
 
     private fun startCountdown() {
         countdownJob?.cancel()
 
         countdownJob = viewModelScope.launch(Dispatchers.IO) {
-            for(i in 5 downTo 0) {
+            for (i in 5 downTo 0) {
                 delay(1000)
             }
             _state.update { currentState ->
@@ -211,5 +237,13 @@ class NoteDetailViewModel(
     private fun stopCountdown() {
         countdownJob?.cancel()
         countdownJob = null
+    }
+
+    companion object{
+        private const val NOTE_ID_KEY = "noteId"
+        private const val NEW_NOTE_KEY = "isNewNote"
+        private const val NOTE_TITLE_KEY = "noteTitle"
+        private const val NOTE_CONTENT_KEY = "noteContent"
+        private const val NOTE_MODE_KEY = "noteMode"
     }
 }

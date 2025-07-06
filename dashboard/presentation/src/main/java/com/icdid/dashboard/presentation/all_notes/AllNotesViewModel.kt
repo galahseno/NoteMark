@@ -33,92 +33,97 @@ class AllNotesViewModel(
     private val _event = Channel<AllNotesEvent>()
     val event = _event.receiveAsFlow()
 
-    private var noteId = MutableStateFlow("")
+    private var selectedNoteId = ""
 
     init {
+        observeUserSession(sessionStorage)
+        loadNotes()
+        observeNotes()
+    }
+
+    fun onAction(action: AllNotesAction) {
+        when (action) {
+            is AllNotesAction.OnLongNoteDisplayDialog -> showDeleteDialog(action.id)
+            is AllNotesAction.OnCreateNote -> createNote()
+            is AllNotesAction.OnDeleteNoteConfirmed -> deleteNote()
+            else -> Unit
+        }
+    }
+
+    private fun observeUserSession(sessionStorage: SessionStorage) {
         sessionStorage
             .get()
             .map { it.username }
             .distinctUntilChanged()
             .onEach { username ->
                 _state.update {
-                    it.copy(
-                        username = username.toInitials()
-                    )
+                    it.copy(username = username.toInitials())
                 }
             }
             .launchIn(viewModelScope)
+    }
 
+    private fun loadNotes() {
         viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    isLoading = true
-                )
-            }
+            _state.update { it.copy(isLoading = true) }
             notesRepository.fetchNotes()
+            _state.update { it.copy(isLoading = false) }
         }
+    }
 
+    private fun observeNotes() {
         notesRepository
             .getNotes()
             .onEach { notes ->
                 _state.update { currentState ->
                     currentState.copy(
                         notes = notes,
-                        isLoading = false
                     )
                 }
             }
             .launchIn(viewModelScope)
     }
 
-    fun onAction(action: AllNotesAction) {
-        when (action) {
-            is AllNotesAction.OnLongNoteDisplayDialog -> {
-                noteId.value = action.id
-                _state.update {
-                    it.copy(
-                        showDeleteDialog = !it.showDeleteDialog
-                    )
+    private fun showDeleteDialog(noteId: String) {
+        selectedNoteId = noteId
+        _state.update {
+            it.copy(showDeleteDialog = !it.showDeleteDialog)
+        }
+    }
+
+    private fun createNote() {
+        viewModelScope.launch {
+            val timeNow = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
+            val newNote = NoteDomain(
+                id = UUID.randomUUID().toString(),
+                createdAt = timeNow,
+                lastEditedAt = timeNow
+            )
+
+            when (val result = notesRepository.upsertNote(note = newNote, isUpdate = false)) {
+                is Result.Error -> {
+                    _event.send(AllNotesEvent.Error(result.error.asUiText()))
+                }
+                is Result.Success -> {
+                    _event.send(AllNotesEvent.NoteSaved(result.data))
                 }
             }
+        }
+    }
 
-            AllNotesAction.OnCreateNote -> {
-                viewModelScope.launch {
-                    val timeNow = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
-                    when (
-                        val result = notesRepository.upsertNote(
-                            note = NoteDomain(
-                                id = UUID.randomUUID().toString(),
-                                createdAt = timeNow,
-                                lastEditedAt = timeNow
-                            ),
-                            isUpdate = false
-                        )) {
-                        is Result.Error -> {
-                            _event.send(AllNotesEvent.Error(result.error.asUiText()))
-                        }
-
-                        is Result.Success -> {
-                            _event.send(AllNotesEvent.NoteSaved(result.data))
-                        }
-                    }
-                }
+    private fun deleteNote() {
+        viewModelScope.launch {
+            if (selectedNoteId.isNotEmpty()) {
+                notesRepository.deleteNote(selectedNoteId)
+                selectedNoteId = ""
             }
+            hideDeleteDialog()
+        }
+    }
 
-            AllNotesAction.OnDeleteNoteConfirmed -> {
-                viewModelScope.launch {
-                    if (noteId.value.isNotEmpty()) {
-                        notesRepository.deleteNote(noteId.value)
-                    }
-                    _state.update {
-                        it.copy(
-                            showDeleteDialog = !it.showDeleteDialog
-                        )
-                    }
-                }
-            }
-
-            else -> Unit
+    private fun hideDeleteDialog() {
+        _state.update {
+            it.copy(showDeleteDialog = false)
         }
     }
 }
