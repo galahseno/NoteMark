@@ -20,6 +20,7 @@ fun NavigationButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     icon: ImageVector =Icons.Default.Close,
+    enabled: Boolean = true,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -27,6 +28,7 @@ fun NavigationButton(
         modifier = modifier
             .size(20.dp)
             .clickable(
+                enabled = enabled,
                 interactionSource = interactionSource,
                 indication = null,
                 onClick = { onClick() }

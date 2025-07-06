@@ -10,5 +10,6 @@ data class NoteDetailState(
     val lastEditedAt: UiText? = null,
     val noteMode: NoteDetailMode = NoteDetailMode.VIEW,
     val isSaveNoteDialogVisible: Boolean = false,
-    val isNewNote: Boolean = false
+    val isNewNote: Boolean = false,
+    val areUiElementsVisible: Boolean = true,
 )

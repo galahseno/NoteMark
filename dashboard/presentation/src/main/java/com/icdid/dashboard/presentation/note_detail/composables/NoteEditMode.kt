@@ -36,6 +36,7 @@ fun NoteFormView(
     isTablet: Boolean = false,
     state: NoteDetailState = NoteDetailState(),
     onAction: (NoteDetailAction) -> Unit = {},
+    isEditable: Boolean = true,
 ) {
     val scrollState = rememberScrollState()
     val horizontalPadding = if(isTablet) 24.dp else 16.dp
@@ -45,16 +46,19 @@ fun NoteFormView(
     val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+        if(isEditable) {
+            focusRequester.requestFocus()
+        }
     }
-
-
+    
     LaunchedEffect(key1 = state.title) {
-        if(state.title.isNotEmpty()) {
-            textState = TextFieldValue(
-                text = state.title,
-                selection = TextRange(state.title.length)
-            )
+        if(isEditable) {
+            if(state.title.isNotEmpty()) {
+                textState = TextFieldValue(
+                    text = state.title,
+                    selection = TextRange(state.title.length)
+                )
+            }
         }
     }
 
@@ -95,6 +99,7 @@ fun NoteFormView(
             textStyle = LocalNoteMarkTypography.current.titleLarge.copy(
                 color = MaterialTheme.colorScheme.onSurface
             ),
+            enabled = isEditable,
         )
 
         HorizontalDivider(
@@ -129,7 +134,8 @@ fun NoteFormView(
             },
             textStyle = LocalNoteMarkTypography.current.bodyLarge.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            ),
+            enabled = isEditable,
         )
     }
 }

@@ -10,4 +10,6 @@ sealed interface NoteDetailAction {
     data object OnConfirmationDialogDismissed: NoteDetailAction
     data object OnConfirmationDialogConfirmed: NoteDetailAction
     data class OnChangeMode(val detailMode: NoteDetailMode): NoteDetailAction
+    data object OnReadModeTap: NoteDetailAction
+    data object OnScrollStarted: NoteDetailAction
 }

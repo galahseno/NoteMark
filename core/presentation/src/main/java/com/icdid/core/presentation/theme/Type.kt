@@ -50,7 +50,7 @@ internal data object MainTypography : NoteMarkTypography(
         fontFamily = SpaceGrotesk,
         fontWeight = FontWeight.Medium,
         fontSize = 20.sp,
-        lineHeight = 34.sp,
+        lineHeight = 24.sp,
     ),
     titleSmall = TextStyle(
         fontFamily = SpaceGrotesk,

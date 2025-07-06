@@ -6,4 +6,5 @@ sealed interface NoteDetailEvent {
     data object OnDiscardChanges: NoteDetailEvent
     data class Error(val error: UiText): NoteDetailEvent
     data object NoteSaved: NoteDetailEvent
+    data object OnCountdownFinished: NoteDetailEvent
 }
