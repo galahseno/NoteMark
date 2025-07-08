@@ -1,6 +1,6 @@
 package com.icdid.dashboard.presentation.note_detail.composables
 
-import androidx.compose.foundation.border
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,12 +25,11 @@ import com.icdid.dashboard.presentation.note_detail.NoteDetailState
 
 @Composable
 fun NoteViewMode(
+    modifier: Modifier = Modifier,
     state: NoteDetailState,
     isTablet: Boolean,
-    modifier: Modifier = Modifier,
+    scrollState: ScrollState = rememberScrollState()
 ) {
-    val scrollState = rememberScrollState()
-
     Column(
         modifier = modifier
             .verticalScroll(scrollState),
@@ -39,20 +38,17 @@ fun NoteViewMode(
         Text(
             text = state.title,
             style = if (isTablet) LocalNoteMarkTypography.current.titleXLarge
-            else LocalNoteMarkTypography.current.titleLarge,
+                else LocalNoteMarkTypography.current.titleLarge,
             modifier = Modifier
                 .padding(start = 16.dp)
         )
 
+        HorizontalDivider()
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.surface
-                )
                 .padding(
-                    vertical = 20.dp,
                     horizontal = if (isTablet) 24.dp else 16.dp
                 )
         ) {
@@ -90,6 +86,8 @@ fun NoteViewMode(
                 }
             }
         }
+
+        HorizontalDivider()
 
         Text(
             text = state.content,

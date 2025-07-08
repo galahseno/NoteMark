@@ -32,7 +32,7 @@ fun NoteDetailPortraitView(
     state: NoteDetailState = NoteDetailState(),
     onAction: (NoteDetailAction) -> Unit = {},
 ) {
-    val horizontalPadding = if(isTablet) 20.dp else 16.dp
+    val horizontalPadding = if (isTablet) 20.dp else 16.dp
 
     Column(
         modifier = Modifier
@@ -45,7 +45,7 @@ fun NoteDetailPortraitView(
                     horizontal = horizontalPadding,
                 )
         ) {
-            when(state.noteMode) {
+            when (state.noteMode) {
                 NoteDetailMode.VIEW -> {
                     NavigationButton(
                         icon = Icons.AutoMirrored.Filled.ArrowBackIos,
@@ -73,6 +73,7 @@ fun NoteDetailPortraitView(
                             .weight(1f)
                     )
                 }
+
                 NoteDetailMode.EDIT -> {
                     NavigationButton(
                         onClick = { onAction(NoteDetailAction.OnCloseClicked) }
@@ -93,19 +94,19 @@ fun NoteDetailPortraitView(
                         }
                     )
                 }
-                NoteDetailMode.READ -> {
-                    // TODO Read mode UI
-                }
+
+                NoteDetailMode.READ -> Unit
             }
         }
 
-        when(state.noteMode) {
+        when (state.noteMode) {
             NoteDetailMode.VIEW -> {
                 NoteViewMode(
                     state = state,
                     isTablet = isTablet,
                 )
             }
+
             NoteDetailMode.EDIT -> {
                 NoteFormView(
                     isTablet = isTablet,
@@ -113,8 +114,12 @@ fun NoteDetailPortraitView(
                     onAction = onAction,
                 )
             }
+
             NoteDetailMode.READ -> {
-                // TODO Read mode UI
+                NoteViewMode(
+                    state = state,
+                    isTablet = isTablet,
+                )
             }
         }
     }

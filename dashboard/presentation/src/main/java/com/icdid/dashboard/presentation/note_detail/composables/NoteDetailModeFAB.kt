@@ -31,9 +31,10 @@ import com.icdid.dashboard.presentation.note_detail.model.NoteDetailMode
 
 @Composable
 fun NoteDetailModeFAB(
+    modifier: Modifier = Modifier,
     noteDetailMode: NoteDetailMode,
     onAction: (NoteDetailAction) -> Unit,
-    modifier: Modifier = Modifier
+    isVisible: Boolean = true,
 ) {
     Surface(
         shape = MaterialTheme.shapes.large,
@@ -65,11 +66,14 @@ fun NoteDetailModeFAB(
                     .clickable {
                         when (noteDetailMode) {
                             NoteDetailMode.VIEW,
-                            NoteDetailMode.READ -> onAction(
-                                NoteDetailAction.OnChangeMode(
-                                    NoteDetailMode.EDIT
+                            NoteDetailMode.READ ->
+                                onAction(
+                                    if (isVisible) {
+                                        NoteDetailAction.OnChangeMode(NoteDetailMode.EDIT)
+                                    } else {
+                                        NoteDetailAction.OnReadModeTap
+                                    }
                                 )
-                            )
 
                             NoteDetailMode.EDIT -> onAction(
                                 NoteDetailAction.OnChangeMode(
@@ -105,11 +109,14 @@ fun NoteDetailModeFAB(
                         when (noteDetailMode) {
                             NoteDetailMode.VIEW,
                             NoteDetailMode.EDIT -> onAction(
-                                NoteDetailAction.OnChangeMode(
-                                    NoteDetailMode.READ
-                                )
+                                if(isVisible) {
+                                    NoteDetailAction.OnChangeMode(
+                                        NoteDetailMode.READ
+                                    )
+                                } else {
+                                    NoteDetailAction.OnReadModeTap
+                                }
                             )
-
                             NoteDetailMode.READ -> onAction(
                                 NoteDetailAction.OnChangeMode(
                                     NoteDetailMode.VIEW

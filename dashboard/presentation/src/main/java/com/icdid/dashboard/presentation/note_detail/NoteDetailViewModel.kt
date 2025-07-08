@@ -11,7 +11,9 @@ import com.icdid.dashboard.presentation.note_detail.NoteDetailEvent.Error
 import com.icdid.dashboard.presentation.note_detail.model.NoteDetailMode
 import com.icdid.dashboard.presentation.util.formatDate
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -24,7 +26,7 @@ import java.time.Instant
 import java.time.format.DateTimeFormatter
 
 class NoteDetailViewModel(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val notesRepository: NotesRepository
 ) : ViewModel() {
     private val noteId = savedStateHandle.get<String>("noteId") ?: ""
@@ -35,6 +37,8 @@ class NoteDetailViewModel(
 
     private val _event = Channel<NoteDetailEvent>()
     val event = _event.receiveAsFlow()
+
+    private var countdownJob: Job? = null
 
     private val _originalTitle = MutableStateFlow("")
     private val _originalContent = MutableStateFlow("")
@@ -149,9 +153,32 @@ class NoteDetailViewModel(
             }
 
             is NoteDetailAction.OnChangeMode -> {
+                stopCountdown()
                 _state.update { currentState ->
                     currentState.copy(
                         noteMode = action.detailMode,
+                        areUiElementsVisible = action.detailMode != NoteDetailMode.READ
+                    )
+                }
+            }
+
+            NoteDetailAction.OnReadModeTap -> {
+                if(!_state.value.areUiElementsVisible) {
+                    startCountdown()
+                } else {
+                    stopCountdown()
+                }
+                _state.update { currentState ->
+                    currentState.copy(
+                        areUiElementsVisible = !currentState.areUiElementsVisible
+                    )
+                }
+            }
+
+            NoteDetailAction.OnScrollStarted -> {
+                _state.update { currentState ->
+                    currentState.copy(
+                        areUiElementsVisible = false,
                     )
                 }
             }
@@ -164,5 +191,25 @@ class NoteDetailViewModel(
                 notesRepository.deleteNote(noteId)
             }
         }
+    }
+
+    private fun startCountdown() {
+        countdownJob?.cancel()
+
+        countdownJob = viewModelScope.launch(Dispatchers.IO) {
+            for(i in 5 downTo 0) {
+                delay(1000)
+            }
+            _state.update { currentState ->
+                currentState.copy(
+                    areUiElementsVisible = false
+                )
+            }
+        }
+    }
+
+    private fun stopCountdown() {
+        countdownJob?.cancel()
+        countdownJob = null
     }
 }

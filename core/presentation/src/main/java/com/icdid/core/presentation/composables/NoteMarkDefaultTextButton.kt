@@ -19,7 +19,7 @@ fun NoteMarkDefaultTextButton(
     uppercase: Boolean = false,
     style: TextStyle = MaterialTheme.typography.titleSmall,
     textColor: Color = MaterialTheme.colorScheme.primary,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 

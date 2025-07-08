@@ -1,7 +1,10 @@
 package com.icdid.dashboard.presentation.note_detail
 
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -9,20 +12,26 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.icdid.core.presentation.composables.FadeVisibilityComponent
 import com.icdid.core.presentation.model.DeviceType
 import com.icdid.core.presentation.theme.NoteMarkTheme
 import com.icdid.core.presentation.utils.ObserveAsEvents
 import com.icdid.core.presentation.utils.UiText
+import com.icdid.core.presentation.utils.applyIf
 import com.icdid.dashboard.presentation.R
 import com.icdid.dashboard.presentation.components.NoteDialog
 import com.icdid.dashboard.presentation.note_detail.composables.NoteDetailModeFAB
+import com.icdid.dashboard.presentation.note_detail.model.NoteDetailMode
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -54,6 +63,10 @@ fun NoteDetailRoot(
                 Toast.makeText(context, R.string.successfully_save_note, Toast.LENGTH_LONG).show()
                 onNavigateBack()
             }
+
+            NoteDetailEvent.OnCountdownFinished -> {
+                onNavigateBack()
+            }
         }
     }
 
@@ -68,17 +81,31 @@ fun NoteDetailScreen(
     state: NoteDetailState,
     onAction: (NoteDetailAction) -> Unit,
 ) {
+    val activity = LocalView.current.context as? Activity
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val deviceType = DeviceType.fromWindowsSizeClass(windowSizeClass)
     val isTablet = deviceType.isTablet()
 
+    when (state.noteMode) {
+        NoteDetailMode.READ -> {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+
+        else -> activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+    }
+
     Scaffold(
         floatingActionButton = {
             if (!state.isNewNote) {
-                NoteDetailModeFAB(
-                    noteDetailMode = state.noteMode,
-                    onAction = onAction,
-                )
+                FadeVisibilityComponent(
+                    isVisible = state.areUiElementsVisible,
+                ) {
+                    NoteDetailModeFAB(
+                        noteDetailMode = state.noteMode,
+                        onAction = onAction,
+                        isVisible = state.areUiElementsVisible,
+                    )
+                }
             }
         },
         floatingActionButtonPosition = FabPosition.Center,
@@ -86,6 +113,13 @@ fun NoteDetailScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .applyIf(state.noteMode == NoteDetailMode.READ) {
+                    pointerInput(Unit) {
+                        detectTapGestures {
+                            onAction(NoteDetailAction.OnReadModeTap)
+                        }
+                    }
+                }
                 .padding(innerPadding)
         ) {
             when (deviceType) {
@@ -116,6 +150,12 @@ fun NoteDetailScreen(
             confirmText = stringResource(R.string.confirmation_dialog_confirm),
             dismissText = stringResource(R.string.confirmation_dialog_dismiss),
         )
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        }
     }
 }
 
