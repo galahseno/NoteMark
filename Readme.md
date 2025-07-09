@@ -7,17 +7,17 @@
 ## Project Status
 
 This project is divided in 4 different milestones that are launched every fortnight. 
-We are currently working in **milestone 2**
+We are currently working in **milestone 3**
 
 ### 🚨 Latest Features ###
 
-- **All Notes Screen**
-  - Display list of Note with offline support.
-  - Create new note with default title
+- **Settings Screen**
+  - New button for logging user out
 - **Detail Note Screen**
-  - Display detail Note.
-  - Update Note data
-  - Implemented toast for message.
+  - Now detail note screen has 3 different modes:
+    - View: Just shows the note
+    - Read: Shows the note hiding the elements from the UI
+    - Edit: Allows to edit the note
 
 ---
 
@@ -36,7 +36,7 @@ We are currently working in **milestone 2**
 
 ## 🎥 Demo ##
 
-https://github.com/user-attachments/assets/29e42c9d-aed6-4323-bd8f-181c4fba5cdd
+https://github.com/user-attachments/assets/ca9d0867-7974-4d57-a733-7aa18c0a5080
 
 ## 📱 Screenshots (portrait = dark mode || landscape = light mode) ##
 
@@ -52,13 +52,35 @@ https://github.com/user-attachments/assets/29e42c9d-aed6-4323-bd8f-181c4fba5cdd
 
 ### Detail Notes ###
 
-| Mobile Portrait                                                              | Mobile Landscape                                                               | 
-|------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
-| <img src="assets/screenshots/detail/detail_mobile_portrait.png" width="600" /> | <img src="assets/screenshots/detail/detail_mobile_landscape.png" width="1200" /> | 
+#### View Mode ####
 
-| Tablet Portrait                                                              | Tablet Landscape                                                               |
-|------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
-| <img src="assets/screenshots/detail/detail_tablet_portrait.png" width="600" /> | <img src="assets/screenshots/detail/detail_tablet_landscape.png" width="1200" /> |
+| Portrait                                                                               | Landscape                                                                                | 
+|----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
+| <img src="assets/screenshots/detail/view/detail_view_mode_portrait.png" width="600" /> | <img src="assets/screenshots/detail/view/detail_view_mode_landscape.png" width="1200" /> |
+
+#### Read Mode ####
+
+⚠️ Read mode is only available in landscape mode.
+
+| Mobile Landscape (with UI controls)                                                      | Tablet Landscape (without UI controls)                                                     | 
+|------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| <img src="assets/screenshots/detail/read/detail_read_mode_landscape.png" width="1200" /> | <img src="assets/screenshots/detail/read/detail_read_mode_landscape_2.png" width="1200" /> |
+
+#### Edit Mode ####
+
+| Portrait                                                                               | Landscape                                                                                | 
+|----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
+| <img src="assets/screenshots/detail/edit/detail_edit_mode_portrait.png" width="600" /> | <img src="assets/screenshots/detail/edit/detail_edit_mode_landscape.png" width="1200" /> |
+
+### Settings ###
+
+| Mobile Portrait                                                                    | Mobile Landscape                                                               | 
+|------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| <img src="assets/screenshots/settings/settings_mobile_portrait.png" width="600" /> | <img src="assets/screenshots/settings/settings_mobile_landscape.png" width="1200" /> | 
+
+| Tablet Portrait                                                                    | Tablet Landscape                                                                     |
+|------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
+| <img src="assets/screenshots/settings/settings_tablet_portrait.png" width="600" /> | <img src="assets/screenshots/settings/settings_tablet_landscape.png" width="1200" /> |
 
 ---
 
