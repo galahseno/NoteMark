@@ -24,5 +24,5 @@
     <string name="all_notes">All Notes</string>
     <string name="date_created">Date Created</string>
     <string name="last_edited">Last edited</string>
-    <string name="just_now">Just Now\n</string>
+    <string name="just_now">Just Now</string>
 </resources>

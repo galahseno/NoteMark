@@ -1,7 +1,12 @@
+@file:OptIn(FlowPreview::class)
+
 package com.icdid.dashboard.presentation.note_detail.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -16,10 +21,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
@@ -29,41 +37,57 @@ import com.icdid.core.presentation.theme.LocalNoteMarkTypography
 import com.icdid.dashboard.presentation.R
 import com.icdid.dashboard.presentation.note_detail.NoteDetailAction
 import com.icdid.dashboard.presentation.note_detail.NoteDetailState
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
-fun NoteFormView(
+fun NoteEditMode(
     modifier: Modifier = Modifier,
     isTablet: Boolean = false,
     state: NoteDetailState = NoteDetailState(),
     onAction: (NoteDetailAction) -> Unit = {},
-    isEditable: Boolean = true,
 ) {
     val scrollState = rememberScrollState()
-    val horizontalPadding = if(isTablet) 24.dp else 16.dp
+    val horizontalPadding = if (isTablet) 24.dp else 16.dp
 
-    var textState by remember { mutableStateOf(TextFieldValue("")) }
+    var textState by remember { mutableStateOf(TextFieldValue(state.title)) }
+    var contentState by remember {
+        mutableStateOf(TextFieldValue(state.content))
+    }
 
-    val focusRequester = remember { FocusRequester() }
+    val focusTitleRequester = remember { FocusRequester() }
+    val focusContentRequester = remember { FocusRequester() }
+    var isContentFocused by remember { mutableStateOf(false) }
+
+    val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
+    val imeBottom = WindowInsets.ime.asPaddingValues().calculateBottomPadding()
 
     LaunchedEffect(Unit) {
-        if(isEditable) {
-            focusRequester.requestFocus()
-        }
-    }
-    
-    LaunchedEffect(key1 = state.title) {
-        if(isEditable) {
-            if(state.title.isNotEmpty()) {
-                textState = TextFieldValue(
-                    text = state.title,
-                    selection = TextRange(state.title.length)
-                )
-            }
-        }
+        focusTitleRequester.requestFocus()
+        textState = textState.copy(
+            selection = TextRange(textState.text.length)
+        )
     }
 
-    LaunchedEffect(key1 = state.content) {
-        scrollState.animateScrollTo(scrollState.maxValue)
+    LaunchedEffect(isContentFocused) {
+        if (isContentFocused) {
+            contentState = contentState.copy(
+                selection = TextRange(contentState.text.length)
+            )
+
+            if(!imeVisible) {
+                snapshotFlow { imeBottom }
+                    .distinctUntilChanged()
+                    .debounce(300)
+                    .collectLatest {
+                        scrollState.animateScrollTo(scrollState.maxValue)
+                    }
+            } else {
+                scrollState.animateScrollTo(scrollState.maxValue)
+            }
+        }
     }
 
     Column(
@@ -74,18 +98,17 @@ fun NoteFormView(
         BasicTextField(
             modifier = Modifier
                 .padding(
-                    vertical = 20.dp,
-                    horizontal = horizontalPadding
+                    vertical = 20.dp, horizontal = horizontalPadding
                 )
-                .focusRequester(focusRequester),
+                .focusRequester(focusTitleRequester),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             value = textState,
             onValueChange = {
                 onAction(NoteDetailAction.OnNoteTitleChanged(it.text))
-                textState = it.copy(selection = TextRange(it.text.length))
+                textState = it
             },
             decorationBox = { innerTextField ->
-                if(state.title.isEmpty()) {
+                if (state.title.isEmpty()) {
                     Text(
                         text = stringResource(R.string.note_title),
                         style = LocalNoteMarkTypography.current.titleLarge.copy(
@@ -99,7 +122,6 @@ fun NoteFormView(
             textStyle = LocalNoteMarkTypography.current.titleLarge.copy(
                 color = MaterialTheme.colorScheme.onSurface
             ),
-            enabled = isEditable,
         )
 
         HorizontalDivider(
@@ -113,16 +135,20 @@ fun NoteFormView(
         BasicTextField(
             modifier = Modifier
                 .padding(
-                    vertical = 20.dp,
-                    horizontal = horizontalPadding
-                ),
+                    vertical = 20.dp, horizontal = horizontalPadding
+                )
+                .focusRequester(focusContentRequester)
+                .onFocusChanged { focusState ->
+                    isContentFocused = focusState.isFocused
+                },
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-            value = state.content,
+            value = contentState,
             onValueChange = {
-                onAction(NoteDetailAction.OnNoteContentChanged(it))
+                contentState = it
+                onAction(NoteDetailAction.OnNoteContentChanged(it.text))
             },
             decorationBox = { innerTextField ->
-                if(state.content.isEmpty()) {
+                if (state.content.isEmpty()) {
                     Text(
                         text = stringResource(R.string.tap_to_enter_note_content),
                         style = LocalNoteMarkTypography.current.bodyLarge.copy(
@@ -135,13 +161,12 @@ fun NoteFormView(
             textStyle = LocalNoteMarkTypography.current.bodyLarge.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             ),
-            enabled = isEditable,
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun NoteFormViewPrev() {
-    NoteFormView()
+private fun NoteEditModePrev() {
+    NoteEditMode()
 }
