@@ -28,7 +28,7 @@ val fabBackground = Brush.verticalGradient(
 )
 
 // region dark mode
-val darkPrimary = Color(0xFF8DAEFF)
+val darkPrimary = Color(0xFF476FC9)
 val darkOnPrimary = Color(0xFF000000)
 val darkSurface = Color(0xFF121212)
 val darkOnSurface = Color(0xFFEAEAEA)

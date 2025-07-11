@@ -1,18 +1,22 @@
 package com.icdid.dashboard.presentation.note_detail.composables
 
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.icdid.core.presentation.theme.LocalNoteMarkTypography
@@ -43,7 +47,11 @@ fun NoteViewMode(
                 .padding(start = 16.dp)
         )
 
-        HorizontalDivider()
+        HorizontalDivider(
+            modifier = Modifier
+                .padding(bottom = 4.dp),
+            color = MaterialTheme.colorScheme.surface,
+        )
 
         Box(
             modifier = Modifier
@@ -87,7 +95,11 @@ fun NoteViewMode(
             }
         }
 
-        HorizontalDivider()
+        HorizontalDivider(
+            modifier = Modifier
+                .padding(top = 4.dp),
+            color = MaterialTheme.colorScheme.surface,
+        )
 
         Text(
             text = state.content,
