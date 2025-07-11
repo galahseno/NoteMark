@@ -22,7 +22,7 @@ import com.icdid.core.presentation.utils.TabletPortrait
 import com.icdid.core.presentation.utils.UiText
 import com.icdid.dashboard.presentation.R
 import com.icdid.dashboard.presentation.note_detail.composables.NavigationButton
-import com.icdid.dashboard.presentation.note_detail.composables.NoteFormView
+import com.icdid.dashboard.presentation.note_detail.composables.NoteEditMode
 import com.icdid.dashboard.presentation.note_detail.composables.NoteViewMode
 import com.icdid.dashboard.presentation.note_detail.model.NoteDetailMode
 
@@ -108,7 +108,7 @@ fun NoteDetailPortraitView(
             }
 
             NoteDetailMode.EDIT -> {
-                NoteFormView(
+                NoteEditMode(
                     isTablet = isTablet,
                     state = state,
                     onAction = onAction,

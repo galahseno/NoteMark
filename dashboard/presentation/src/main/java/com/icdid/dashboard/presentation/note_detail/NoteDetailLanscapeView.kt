@@ -29,7 +29,7 @@ import com.icdid.core.presentation.utils.TabletLandscape
 import com.icdid.core.presentation.utils.UiText
 import com.icdid.dashboard.presentation.R
 import com.icdid.dashboard.presentation.note_detail.composables.NavigationButton
-import com.icdid.dashboard.presentation.note_detail.composables.NoteFormView
+import com.icdid.dashboard.presentation.note_detail.composables.NoteEditMode
 import com.icdid.dashboard.presentation.note_detail.composables.NoteViewMode
 import com.icdid.dashboard.presentation.note_detail.model.NoteDetailMode
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -44,7 +44,7 @@ fun NoteDetailLandscapeView(
     val spaceArrangement = when (state.noteMode) {
         NoteDetailMode.VIEW -> 12.dp
         NoteDetailMode.EDIT -> 70.dp
-        NoteDetailMode.READ -> 12.dp // TODO: Check again for read UI
+        NoteDetailMode.READ -> 12.dp
     }
 
     val scrollState = rememberScrollState()
@@ -127,7 +127,7 @@ fun NoteDetailLandscapeView(
                     }
                 )
 
-                NoteFormView(
+                NoteEditMode(
                     modifier = Modifier
                         .weight(1f)
                         .imePadding(),

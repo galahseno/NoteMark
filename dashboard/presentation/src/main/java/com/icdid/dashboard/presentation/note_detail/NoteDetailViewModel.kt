@@ -74,26 +74,8 @@ class NoteDetailViewModel(
             is NoteDetailAction.OnConfirmationDialogDismissed -> dismissDialog()
             is NoteDetailAction.OnConfirmationDialogConfirmed -> confirmDiscardChanges()
             is NoteDetailAction.OnChangeMode -> changeMode(action.detailMode)
-            NoteDetailAction.OnReadModeTap -> {
-                if (!_state.value.areUiElementsVisible) {
-                    startCountdown()
-                } else {
-                    stopCountdown()
-                }
-                _state.update { currentState ->
-                    currentState.copy(
-                        areUiElementsVisible = !currentState.areUiElementsVisible
-                    )
-                }
-            }
-
-            NoteDetailAction.OnScrollStarted -> {
-                _state.update { currentState ->
-                    currentState.copy(
-                        areUiElementsVisible = false,
-                    )
-                }
-            }
+            NoteDetailAction.OnReadModeTap -> onReadModeTap()
+            NoteDetailAction.OnScrollStarted -> onScrollStarted()
         }
     }
 
@@ -193,11 +175,35 @@ class NoteDetailViewModel(
 
     private fun changeMode(mode: NoteDetailMode) {
         savedStateHandle[NOTE_MODE_KEY] = mode.name
-        stopCountdown()
+        if(mode == NoteDetailMode.READ) {
+            startCountdown()
+        } else {
+            stopCountdown()
+        }
         _state.update {
             it.copy(
                 noteMode = mode,
-                areUiElementsVisible = mode != NoteDetailMode.READ
+            )
+        }
+    }
+
+    private fun onReadModeTap() {
+        if (!_state.value.areUiElementsVisible) {
+            startCountdown()
+        } else {
+            stopCountdown()
+        }
+        _state.update { currentState ->
+            currentState.copy(
+                areUiElementsVisible = !currentState.areUiElementsVisible
+            )
+        }
+    }
+
+    private fun onScrollStarted() {
+        _state.update { currentState ->
+            currentState.copy(
+                areUiElementsVisible = false,
             )
         }
     }
