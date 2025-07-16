@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.icdid.core.domain.Result
 import com.icdid.core.domain.SessionStorage
+import com.icdid.core.presentation.utils.NetworkMonitor
 import com.icdid.core.presentation.utils.asUiText
 import com.icdid.dashboard.domain.NotesRepository
 import com.icdid.dashboard.domain.model.NoteDomain
@@ -24,7 +25,8 @@ import java.util.UUID
 
 class AllNotesViewModel(
     sessionStorage: SessionStorage,
-    private val notesRepository: NotesRepository
+    private val notesRepository: NotesRepository,
+    private val networkMonitor: NetworkMonitor,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AllNotesState())
@@ -36,6 +38,7 @@ class AllNotesViewModel(
     private var selectedNoteId = ""
 
     init {
+        observeNetworkMonitor()
         observeUserSession(sessionStorage)
         loadNotes()
         observeNotes()
@@ -48,6 +51,18 @@ class AllNotesViewModel(
             is AllNotesAction.OnDeleteNoteConfirmed -> deleteNote()
             else -> Unit
         }
+    }
+
+    private fun observeNetworkMonitor() {
+        networkMonitor.isConnected
+            .onEach { isConnected ->
+                _state.update {
+                    it.copy(
+                        isNetworkAvailable = isConnected
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun observeUserSession(sessionStorage: SessionStorage) {

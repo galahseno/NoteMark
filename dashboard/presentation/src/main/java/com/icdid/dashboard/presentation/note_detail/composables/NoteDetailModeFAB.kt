@@ -39,8 +39,6 @@ fun NoteDetailModeFAB(
     Surface(
         shape = MaterialTheme.shapes.large,
         color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 6.dp,
-        shadowElevation = 6.dp,
         modifier = modifier
             .sizeIn(minWidth = 100.dp, minHeight = 52.dp)
     ) {
