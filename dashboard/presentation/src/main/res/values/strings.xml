@@ -25,4 +25,12 @@
     <string name="date_created">Date Created</string>
     <string name="last_edited">Last edited</string>
     <string name="just_now">Just Now</string>
+    <string name="sync_interval">Sync interval</string>
+    <string name="sync_data">Sync Data</string>
+    <string name="never_synced">Never synced</string>
+    <string name="last_sync_s_min_ago">Last sync: %s</string>
+    <string name="manual_only">Manual only</string>
+    <string name="_15_minutes">15 minutes</string>
+    <string name="_30_minutes">30 minutes</string>
+    <string name="_1_hour">1 hour</string>
 </resources>

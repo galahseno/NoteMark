@@ -1,5 +1,6 @@
 package com.icdid.auth.presentation.login
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -76,6 +77,7 @@ fun LoginScreen(
 
     NoteMarkDefaultScreen(
         isFromAuthGraph = true,
+        containerColor = MaterialTheme.colorScheme.primary,
     ) {
         when (deviceType) {
             DeviceType.MOBILE_PORTRAIT, DeviceType.TABLET_PORTRAIT -> LoginPortraitView(

@@ -24,6 +24,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowInsetsControllerCompat
@@ -36,6 +37,7 @@ import kotlinx.coroutines.launch
 fun NoteMarkDefaultScreen(
     modifier: Modifier = Modifier,
     isFromAuthGraph: Boolean = false,
+    containerColor: Color = MaterialTheme.colorScheme.surface,
     floatingActionButton: @Composable () -> Unit = {},
     topAppBar: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
@@ -105,7 +107,7 @@ fun NoteMarkDefaultScreen(
                 }
             )
         },
-        containerColor = if (isFromAuthGraph) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
+        containerColor = containerColor
     ) { innerPadding ->
 
         val view = LocalView.current
