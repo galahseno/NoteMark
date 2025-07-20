@@ -2,13 +2,18 @@ package com.icdid.dashboard.presentation.all_notes
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
@@ -79,12 +84,28 @@ fun AllNotesScreen(
         topAppBar = {
             NoteMarkTopAppBar(
                 title = {
-                    Text(
-                        text = stringResource(com.icdid.core.presentation.R.string.notemark),
-                        style = LocalNoteMarkTypography.current.titleMedium.copy(
-                            lineHeight = 24.sp
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = stringResource(com.icdid.core.presentation.R.string.notemark),
+                            style = LocalNoteMarkTypography.current.titleMedium.copy(
+                                lineHeight = 24.sp
+                            )
                         )
-                    )
+
+                        Spacer(modifier = Modifier.size(4.dp))
+
+                        if (!state.isNetworkAvailable) {
+                            Icon(
+                                modifier = Modifier
+                                    .size(20.dp),
+                                imageVector = Icons.Default.CloudOff,
+                                contentDescription = "Cloud Off",
+                                tint = MaterialTheme.colorScheme.onSurface.copy(0.4f)
+                            )
+                        }
+                    }
                 },
                 actions = {
                     IconButton(
