@@ -15,6 +15,7 @@ import com.icdid.core.domain.EncryptionService
 import com.icdid.core.domain.SessionStorage
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -24,7 +25,7 @@ private const val DATABASE = "notemark_database"
 val coreDataModule = module {
     single { HttpClientFactory(get()).build() }
 
-    single<DataStore<AuthInfoSerializable>> {
+    single<DataStore<AuthInfoSerializable>>(named(AUTH_PREFERENCES)) {
         DataStoreFactory.create(
             serializer = DataStoreSerializer(
                 encryptionService = get(),
@@ -51,6 +52,10 @@ val coreDataModule = module {
 
     single { get<NoteMarkDatabase>().noteDao() }
 
-    singleOf(::EncryptedSessionStorage) bind SessionStorage::class
+    single {
+        EncryptedSessionStorage(
+            dataStore = get(named(AUTH_PREFERENCES)),
+        )
+    } bind SessionStorage::class
     singleOf(::AesEncryptionService) bind EncryptionService::class
 }

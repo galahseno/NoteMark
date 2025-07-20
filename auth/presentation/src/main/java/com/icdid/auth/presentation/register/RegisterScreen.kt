@@ -1,5 +1,6 @@
 package com.icdid.auth.presentation.register
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -90,6 +91,7 @@ fun RegisterScreen(
 
     NoteMarkDefaultScreen(
         isFromAuthGraph = true,
+        containerColor = MaterialTheme.colorScheme.primary,
     ) {
         when (deviceType) {
             DeviceType.MOBILE_PORTRAIT, DeviceType.TABLET_PORTRAIT -> RegisterPortraitView(
