@@ -20,7 +20,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.icdid.core.presentation.composables.FadeVisibilityComponent
@@ -29,8 +28,6 @@ import com.icdid.core.presentation.theme.NoteMarkTheme
 import com.icdid.core.presentation.utils.ObserveAsEvents
 import com.icdid.core.presentation.utils.UiText
 import com.icdid.core.presentation.utils.applyIf
-import com.icdid.dashboard.presentation.R
-import com.icdid.dashboard.presentation.components.NoteDialog
 import com.icdid.dashboard.presentation.note_detail.composables.NoteDetailModeFAB
 import com.icdid.dashboard.presentation.note_detail.model.NoteDetailMode
 import org.koin.androidx.compose.koinViewModel
@@ -129,20 +126,6 @@ fun NoteDetailScreen(
                 )
             }
         }
-
-        NoteDialog(
-            showDialog = state.isSaveNoteDialogVisible,
-            onDismiss = {
-                onAction(NoteDetailAction.OnConfirmationDialogDismissed)
-            },
-            onConfirm = {
-                onAction(NoteDetailAction.OnConfirmationDialogConfirmed)
-            },
-            title = stringResource(R.string.confirmation_dialog_title),
-            content = stringResource(R.string.confirmation_dialog_body),
-            confirmText = stringResource(R.string.confirmation_dialog_confirm),
-            dismissText = stringResource(R.string.confirmation_dialog_dismiss),
-        )
     }
 
     DisposableEffect(Unit) {

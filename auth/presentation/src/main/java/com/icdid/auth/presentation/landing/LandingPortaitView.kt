@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,75 +38,79 @@ fun LandingPortraitView(
     onAction: (LandingAction) -> Unit,
     isTablet: Boolean = false,
 ) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-    ) {
-        Image(
-            painter = painterResource(id = if (isTablet) R.drawable.landing_tablet else R.drawable.landing_phone),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = if (isTablet) ContentScale.FillBounds else ContentScale.Fit,
-            alignment = Alignment.TopCenter
-        )
-        Column(
-            modifier = Modifier
-                .applyIf(isTablet) {
-                    padding(horizontal = 60.dp)
-                }
-                .fillMaxWidth()
-                .then(
-                    if (isTablet) {
-                        Modifier.fillMaxHeight(0.3f)
-                    } else {
-                        Modifier.fillMaxHeight(0.35f)
-                    }
-                )
-                .clip(
-                    RoundedCornerShape(
-                        topStart = if (isTablet) 24.dp else 20.dp,
-                        topEnd = if (isTablet) 24.dp else 20.dp
-                    )
-                )
-                .background(MaterialTheme.colorScheme.surfaceContainerLowest)
-                .then(
-                    if (isTablet) {
-                        Modifier.padding(48.dp)
-                    } else {
-                        Modifier.padding(top = 24.dp, end = 16.dp, start = 16.dp)
-                    }
-                )
-
-                .align(Alignment.BottomCenter),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+    Scaffold { paddingValues ->
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(
+                    bottom = paddingValues
+                        .calculateBottomPadding()
+                ),
         ) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = stringResource(R.string.landing_title),
-                style = if (isTablet) {
-                    LocalNoteMarkTypography.current.titleXLarge.copy(
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Center
-                    )
-                } else {
-                    LocalNoteMarkTypography.current.titleLarge.copy(
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Start
-                    )
-                }
+            Image(
+                painter = painterResource(id = if (isTablet) R.drawable.landing_tablet else R.drawable.landing_phone),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = if (isTablet) ContentScale.FillBounds else ContentScale.Fit,
+                alignment = Alignment.TopCenter
             )
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = stringResource(R.string.landing_subtitle),
-                style = LocalNoteMarkTypography.current.bodyLarge.copy(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = if (isTablet) TextAlign.Center else TextAlign.Start
+            Column(
+                modifier = Modifier
+                    .applyIf(isTablet) {
+                        padding(horizontal = 60.dp)
+                    }
+                    .fillMaxWidth()
+                    .clip(
+                        RoundedCornerShape(
+                            topStart = if (isTablet) 24.dp else 20.dp,
+                            topEnd = if (isTablet) 24.dp else 20.dp
+                        )
+                    )
+                    .background(MaterialTheme.colorScheme.surfaceContainerLowest)
+                    .then(
+                        if (isTablet) {
+                            Modifier.padding(48.dp)
+                        } else {
+                            Modifier
+                                .padding(
+                                    top = 24.dp,
+                                    end = 16.dp,
+                                    start = 16.dp,
+                                )
+                        }
+                    )
+                    .align(Alignment.BottomCenter),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(R.string.landing_title),
+                    style = if (isTablet) {
+                        LocalNoteMarkTypography.current.titleXLarge.copy(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Center
+                        )
+                    } else {
+                        LocalNoteMarkTypography.current.titleLarge.copy(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Start
+                        )
+                    }
                 )
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            LandingButtons(
-                onAction = onAction,
-                modifier = Modifier.fillMaxWidth()
-            )
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(R.string.landing_subtitle),
+                    style = LocalNoteMarkTypography.current.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = if (isTablet) TextAlign.Center else TextAlign.Start
+                    )
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                LandingButtons(
+                    onAction = onAction,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }

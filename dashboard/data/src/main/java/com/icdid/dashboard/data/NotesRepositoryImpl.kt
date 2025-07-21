@@ -43,21 +43,19 @@ class NotesRepositoryImpl(
     }
 
     override suspend fun upsertNote(note: NoteDomain, isUpdate: Boolean): Result<NoteId, DataError> {
-        val localResult = localDataSource.upsertNote(note)
-        if (localResult !is Result.Success) {
-            return localResult
-        }
-
         return applicationScope.async {
             val remoteResult = remoteDataSource.upsertNote(note, isUpdate)
 
             if (remoteResult is Result.Error) {
                 // TODO handle schedule sync when error post api
-                return@async localResult
             }
 
             return@async remoteResult.map { it.id }
         }.await()
+    }
+
+    override suspend fun upsertNoteLocally(note: NoteDomain, isUpdate: Boolean): Result<NoteId, DataError> {
+        return localDataSource.upsertNote(note)
     }
 
 
