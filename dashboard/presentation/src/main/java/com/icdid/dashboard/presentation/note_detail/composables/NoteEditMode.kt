@@ -1,5 +1,3 @@
-@file:OptIn(FlowPreview::class)
-
 package com.icdid.dashboard.presentation.note_detail.composables
 
 import androidx.compose.foundation.background
@@ -18,8 +16,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -41,7 +41,9 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 
+@OptIn(FlowPreview::class)
 @Composable
 fun NoteEditMode(
     modifier: Modifier = Modifier,
@@ -64,6 +66,9 @@ fun NoteEditMode(
     val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     val imeBottom = WindowInsets.ime.asPaddingValues().calculateBottomPadding()
 
+    val coroutineScope = rememberCoroutineScope()
+    var lastContentHeightPx by remember { mutableIntStateOf(0) }
+
     LaunchedEffect(Unit) {
         focusTitleRequester.requestFocus()
         textState = textState.copy(
@@ -78,8 +83,8 @@ fun NoteEditMode(
             )
 
             if(!imeVisible) {
-                snapshotFlow { imeBottom }
-                    .distinctUntilChanged()
+                snapshotFlow { imeBottom }.
+                distinctUntilChanged()
                     .debounce(300)
                     .collectLatest {
                         scrollState.animateScrollTo(scrollState.maxValue)
@@ -141,6 +146,17 @@ fun NoteEditMode(
                 .onFocusChanged { focusState ->
                     isContentFocused = focusState.isFocused
                 },
+            onTextLayout = { textLayoutResult ->
+                val height = textLayoutResult.size.height
+                if (height != lastContentHeightPx) {
+                    lastContentHeightPx = height
+                    if(isContentFocused) {
+                        coroutineScope.launch {
+                            scrollState.animateScrollTo(scrollState.maxValue)
+                        }
+                    }
+                }
+            },
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             value = contentState,
             onValueChange = {

@@ -78,21 +78,6 @@ fun NoteDetailPortraitView(
                     NavigationButton(
                         onClick = { onAction(NoteDetailAction.OnCloseClicked) }
                     )
-
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    NoteMarkDefaultTextButton(
-                        text = stringResource(R.string.save_note),
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            lineHeight = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                        ),
-                        uppercase = true,
-                        onClick = {
-                            onAction(NoteDetailAction.OnSaveNoteClicked)
-                        }
-                    )
                 }
 
                 NoteDetailMode.READ -> Unit

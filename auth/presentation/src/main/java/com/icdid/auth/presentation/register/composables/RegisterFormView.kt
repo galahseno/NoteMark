@@ -3,7 +3,6 @@ package com.icdid.auth.presentation.register.composables
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -29,7 +28,6 @@ fun RegisterFormView(
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
-            .imePadding()
     ) {
         NoteMarkTextField(
             value = state.username,

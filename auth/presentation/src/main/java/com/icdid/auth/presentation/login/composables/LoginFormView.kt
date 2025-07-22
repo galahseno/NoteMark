@@ -29,7 +29,6 @@ fun LoginFormView(
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
-            .imePadding()
     ) {
         NoteMarkTextField(
             value = state.email,

@@ -134,19 +134,6 @@ fun NoteDetailLandscapeView(
                     state = state,
                     onAction = onAction,
                 )
-
-                NoteMarkDefaultTextButton(
-                    text = stringResource(R.string.save_note),
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        lineHeight = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                    ),
-                    uppercase = true,
-                    onClick = {
-                        onAction(NoteDetailAction.OnSaveNoteClicked)
-                    },
-                )
             }
 
             NoteDetailMode.READ -> {
