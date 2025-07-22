@@ -1,4 +1,4 @@
-package com.icdid.core.data.session
+package com.icdid.core.data.datastore
 
 import androidx.datastore.core.DataStore
 import com.icdid.core.data.model.AuthInfoSerializable

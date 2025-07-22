@@ -1,3 +1,5 @@
+@file:OptIn(FlowPreview::class)
+
 package com.icdid.dashboard.presentation.note_detail
 
 import androidx.lifecycle.SavedStateHandle
@@ -26,7 +28,6 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 
-@OptIn(FlowPreview::class)
 class NoteDetailViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val notesRepository: NotesRepository
@@ -51,7 +52,9 @@ class NoteDetailViewModel(
                 .distinctUntilChanged()
                 .debounce(NOTE_SAVING_TIME)
                 .collect {
-                    saveNoteLocally()
+                    if (hasUnsavedChanges()) {
+                        saveNote()
+                    }
                 }
         }
     }
@@ -81,7 +84,7 @@ class NoteDetailViewModel(
 
     fun onAction(action: NoteDetailAction) {
         when (action) {
-            is NoteDetailAction.OnSaveNoteClicked -> saveNoteLocally()
+            is NoteDetailAction.OnSaveNoteClicked -> saveNote()
             is NoteDetailAction.OnNoteTitleChanged -> updateTitle(action.title)
             is NoteDetailAction.OnNoteContentChanged -> updateContent(action.content)
             is NoteDetailAction.OnCloseClicked -> handleClose()
@@ -91,13 +94,13 @@ class NoteDetailViewModel(
         }
     }
 
-    private fun saveNoteLocally() {
+    private fun saveNote() {
         viewModelScope.launch {
             val currentState = _state.value
             val timeNow = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
             val hasChanges = hasUnsavedChanges()
 
-            notesRepository.upsertNoteLocally(
+            val result = notesRepository.upsertNote(
                 note = NoteDomain(
                     id = noteId,
                     title = currentState.title,
@@ -107,6 +110,24 @@ class NoteDetailViewModel(
                 ),
                 isUpdate = hasChanges
             )
+
+            when (result) {
+                is Result.Error -> {
+                    _event.send(Error(result.error.asUiText()))
+                }
+
+                is Result.Success -> {
+                    _originalNote = _originalNote?.copy(
+                        title = currentState.title,
+                        content = currentState.content,
+                        lastEditedAt = timeNow
+                    )
+                    _state.update {
+                        it.copy(isNewNote = false)
+                    }
+                    savedStateHandle[NEW_NOTE_KEY] = false
+                }
+            }
         }
     }
 
@@ -128,45 +149,14 @@ class NoteDetailViewModel(
                 }
 
                 NoteDetailMode.EDIT -> {
-                    if(_state.value.isNewNote && !hasUnsavedChanges()) {
-                        deleteNote()
+                    if (_state.value.isNewNote && !hasUnsavedChanges()) {
+                        deleteNewNote()
                         _event.send(NoteDetailEvent.OnDiscardChanges)
                     } else {
-                        // TODO: Review because if the note is not stored in the server the result will be a 404
-                        val currentState = _state.value
-                        val timeNow = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
-                        val hasChanges = hasUnsavedChanges()
-
-                        val result = notesRepository.upsertNote(
-                            note = NoteDomain(
-                                id = noteId,
-                                title = currentState.title,
-                                content = currentState.content,
-                                createdAt = _originalNote?.createdAt ?: timeNow,
-                                lastEditedAt = timeNow,
-                            ),
-                            isUpdate = hasChanges
-                        )
-
-                        when (result) {
-                            is Result.Error -> {
-                                // TODO: Add to sync queue and retry later
-                                _event.send(Error(result.error.asUiText()))
-                            }
-
-                            is Result.Success -> {
-                                _originalNote = _originalNote?.copy(
-                                    title = currentState.title,
-                                    content = currentState.content,
-                                    lastEditedAt = timeNow
-                                )
-                                _state.update {
-                                    it.copy(
-                                        noteMode = NoteDetailMode.VIEW,
-                                        lastEditedAt = timeNow.formatDate()
-                                    )
-                                }
-                            }
+                        _state.update {
+                            it.copy(
+                                noteMode = NoteDetailMode.VIEW,
+                            )
                         }
                     }
                 }
@@ -176,7 +166,7 @@ class NoteDetailViewModel(
 
     private fun changeMode(mode: NoteDetailMode) {
         savedStateHandle[NOTE_MODE_KEY] = mode.name
-        if(mode == NoteDetailMode.READ) {
+        if (mode == NoteDetailMode.READ) {
             startCountdown()
         } else {
             stopCountdown()
@@ -209,7 +199,7 @@ class NoteDetailViewModel(
         }
     }
 
-    private fun deleteNote() {
+    private fun deleteNewNote() {
         viewModelScope.launch {
             notesRepository.deleteNote(noteId)
         }
@@ -242,7 +232,7 @@ class NoteDetailViewModel(
         countdownJob = null
     }
 
-    companion object{
+    companion object {
         private const val NOTE_ID_KEY = "noteId"
         private const val NEW_NOTE_KEY = "isNewNote"
         private const val NOTE_TITLE_KEY = "noteTitle"

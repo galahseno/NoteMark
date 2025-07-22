@@ -9,13 +9,15 @@ import com.icdid.core.domain.DataError
 import com.icdid.core.domain.EmptyResult
 import com.icdid.core.domain.Result
 import com.icdid.core.domain.SessionStorage
+import com.icdid.core.domain.UserSettings
 import com.icdid.core.domain.asEmptyDataResult
 import com.icdid.core.domain.model.AuthInfo
 import io.ktor.client.HttpClient
 
 class AuthRepositoryImpl(
     private val httpClient: HttpClient,
-    private val sessionStorage: SessionStorage
+    private val sessionStorage: SessionStorage,
+    private val userSettings: UserSettings
 ) : AuthRepository {
     override suspend fun login(email: String, password: String): EmptyResult<DataError.Network> {
         val result = httpClient.post<LoginRequest, LoginResponse>(
@@ -31,6 +33,7 @@ class AuthRepositoryImpl(
                     username = result.data.username
                 )
             )
+            userSettings.getUserId(result.data.username)
         }
         return result.asEmptyDataResult()
     }

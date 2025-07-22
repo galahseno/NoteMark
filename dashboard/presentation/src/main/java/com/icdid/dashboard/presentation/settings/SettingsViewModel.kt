@@ -3,10 +3,10 @@ package com.icdid.dashboard.presentation.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.icdid.core.domain.Result
+import com.icdid.core.domain.UserSettings
+import com.icdid.core.domain.model.SyncInterval
 import com.icdid.core.presentation.utils.asUiText
 import com.icdid.dashboard.domain.NotesRepository
-import com.icdid.dashboard.domain.UserSettings
-import com.icdid.dashboard.domain.model.SyncInterval
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

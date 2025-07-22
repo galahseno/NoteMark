@@ -10,6 +10,7 @@ import com.icdid.dashboard.domain.NotesRepository
 import com.icdid.dashboard.domain.model.NoteDomain
 import com.icdid.dashboard.presentation.util.toInitials
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -81,7 +82,7 @@ class AllNotesViewModel(
     private fun loadNotes() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            notesRepository.fetchNotes()
+            delay(500)
             _state.update { it.copy(isLoading = false) }
         }
     }
@@ -115,14 +116,12 @@ class AllNotesViewModel(
                 lastEditedAt = timeNow
             )
 
-            when (val result = notesRepository.upsertNoteLocally(note = newNote, isUpdate = false)) {
+            when (val result = notesRepository.upsertNote(note = newNote, isUpdate = false)) {
                 is Result.Error -> {
                     _event.send(AllNotesEvent.Error(result.error.asUiText()))
                 }
                 is Result.Success -> {
                     _event.send(AllNotesEvent.NoteSaved(result.data))
-                    //TODO: I think that this will changed and should be added to sync queue
-                    notesRepository.upsertNote(note = newNote, isUpdate = false)
                 }
             }
         }
