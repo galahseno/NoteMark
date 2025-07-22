@@ -1,6 +1,6 @@
 package com.icdid.dashboard.presentation.settings
 
-import com.icdid.dashboard.domain.model.SyncInterval
+import com.icdid.core.domain.model.SyncInterval
 
 sealed interface SettingsAction {
     data object OnLogOutClick : SettingsAction

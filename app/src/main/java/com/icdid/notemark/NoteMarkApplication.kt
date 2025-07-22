@@ -13,6 +13,7 @@ import kotlinx.coroutines.SupervisorJob
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
 import timber.log.Timber
 
@@ -29,7 +30,7 @@ class NoteMarkApplication : Application() {
         startKoin {
             androidContext(this@NoteMarkApplication)
             androidLogger()
-
+            workManagerFactory()
             modules(
                 appModule,
                 authPresentationModule,

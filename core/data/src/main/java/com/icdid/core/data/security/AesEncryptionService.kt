@@ -3,6 +3,7 @@ package com.icdid.core.data.security
 import android.util.Base64
 import com.icdid.core.data.security.KeyManager.TRANSFORMATION
 import com.icdid.core.domain.EncryptionService
+import java.security.MessageDigest
 import javax.crypto.Cipher
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
@@ -39,8 +40,8 @@ class AesEncryptionService(
     }
 
     /**
-    * blockSize - 4 cause no padding in the cipher for GCM block mode
-    **/
+     * blockSize - 4 cause no padding in the cipher for GCM block mode
+     **/
     override fun decryptDataStore(bytes: ByteArray): ByteArray {
         val cipher = Cipher.getInstance(transformation)
         val iv = bytes.copyOfRange(0, (cipher.blockSize - 4))
@@ -48,6 +49,12 @@ class AesEncryptionService(
 
         cipher.init(Cipher.DECRYPT_MODE, secretKey, GCMParameterSpec(tLen, iv))
         return cipher.doFinal(data)
+    }
+
+    override fun hashKey(key: String): String {
+        return MessageDigest.getInstance("SHA-256")
+            .digest(key.toByteArray())
+            .joinToString("") { "%02x".format(it) }
     }
 
     private fun ByteArray.toBase64(): String = Base64.encodeToString(this, Base64.DEFAULT)

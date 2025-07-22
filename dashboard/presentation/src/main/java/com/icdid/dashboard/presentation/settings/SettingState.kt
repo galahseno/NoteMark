@@ -1,7 +1,7 @@
 package com.icdid.dashboard.presentation.settings
 
+import com.icdid.core.domain.model.SyncInterval
 import com.icdid.core.presentation.utils.UiText
-import com.icdid.dashboard.domain.model.SyncInterval
 import com.icdid.dashboard.presentation.R
 
 data class SettingState(

@@ -5,4 +5,6 @@ interface EncryptionService {
     fun decrypt(encryptedData: String, iv: String): String
     fun encryptDataStore(bytes: ByteArray): ByteArray
     fun decryptDataStore(bytes: ByteArray): ByteArray
+
+    fun hashKey(key: String): String
 }

@@ -4,15 +4,21 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.icdid.core.data.database.NoteMarkDatabase
+import com.icdid.core.data.datastore.EncryptedSessionStorage
 import com.icdid.core.data.model.AuthInfoSerializable
 import com.icdid.core.data.network.HttpClientFactory
 import com.icdid.core.data.security.AesEncryptionService
 import com.icdid.core.data.security.KeyManager
 import com.icdid.core.data.serializer.DataStoreSerializer
-import com.icdid.core.data.session.EncryptedSessionStorage
+import com.icdid.core.data.sync.SyncNotesWorkerScheduler
+import com.icdid.core.data.sync.UserIdProviderImpl
 import com.icdid.core.domain.EncryptionService
 import com.icdid.core.domain.SessionStorage
+import com.icdid.core.domain.sync.SyncNotesScheduler
+import com.icdid.core.domain.sync.UserIdProvider
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
@@ -44,13 +50,33 @@ val coreDataModule = module {
     }
 
     single {
+        val migration1to2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+            CREATE TABLE IF NOT EXISTS sync_record (
+                id TEXT NOT NULL PRIMARY KEY,
+                userId TEXT NOT NULL,
+                noteId TEXT,
+                operation TEXT NOT NULL,
+                payload TEXT,
+                timestamp INTEGER NOT NULL
+            )
+            """.trimIndent()
+                )
+            }
+        }
+
         Room.databaseBuilder(
             get(),
             NoteMarkDatabase::class.java, DATABASE
-        ).build()
+        )
+            .addMigrations(migration1to2)
+            .build()
     }
 
     single { get<NoteMarkDatabase>().noteDao() }
+    single { get<NoteMarkDatabase>().syncRecordDao() }
 
     single {
         EncryptedSessionStorage(
@@ -58,4 +84,6 @@ val coreDataModule = module {
         )
     } bind SessionStorage::class
     singleOf(::AesEncryptionService) bind EncryptionService::class
+    singleOf(::SyncNotesWorkerScheduler) bind SyncNotesScheduler::class
+    singleOf(::UserIdProviderImpl) bind UserIdProvider::class
 }

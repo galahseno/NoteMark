@@ -1,4 +1,4 @@
-package com.icdid.dashboard.domain.model
+package com.icdid.core.domain.model
 
 enum class SyncInterval {
     Manual,

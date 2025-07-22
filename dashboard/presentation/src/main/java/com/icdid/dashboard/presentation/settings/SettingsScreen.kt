@@ -61,7 +61,7 @@ import com.icdid.core.presentation.utils.SnackbarController
 import com.icdid.core.presentation.utils.SnackbarEvent
 import com.icdid.core.presentation.utils.applyIf
 import com.icdid.core.presentation.utils.crop
-import com.icdid.dashboard.domain.model.SyncInterval
+import com.icdid.core.domain.model.SyncInterval
 import com.icdid.dashboard.presentation.R
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel

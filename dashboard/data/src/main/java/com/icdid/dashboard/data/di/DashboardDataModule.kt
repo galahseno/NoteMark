@@ -4,14 +4,14 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.icdid.core.data.datastore.UserSettingsDataStore
+import com.icdid.core.domain.UserSettings
 import com.icdid.dashboard.data.NotesRepositoryImpl
-import com.icdid.dashboard.data.UserSettingsDataStore
 import com.icdid.dashboard.data.local.RoomLocalDataSource
 import com.icdid.dashboard.data.network.KtorRemoteDataSource
 import com.icdid.dashboard.domain.LocalDataSource
 import com.icdid.dashboard.domain.NotesRepository
 import com.icdid.dashboard.domain.RemoteDataSource
-import com.icdid.dashboard.domain.UserSettings
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
@@ -36,7 +36,8 @@ val dashboardDataModule = module {
 
     single {
         UserSettingsDataStore(
-            get(named(PREFERENCES_DATA_STORE_NAME))
+            get(named(PREFERENCES_DATA_STORE_NAME)),
+            get(),
         )
     } bind UserSettings::class
 }
