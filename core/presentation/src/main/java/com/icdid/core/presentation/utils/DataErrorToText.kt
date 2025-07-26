@@ -34,6 +34,10 @@ fun DataError.asUiText(): UiText {
             R.string.error_disk_full
         )
 
+        DataError.Local.NO_DATA -> UiText.StringResource(
+            R.string.error_no_data
+        )
+
         else -> UiText.StringResource(
             R.string.error_unknown
         )

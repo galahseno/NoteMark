@@ -123,7 +123,10 @@ class NoteDetailViewModel(
                         lastEditedAt = timeNow
                     )
                     _state.update {
-                        it.copy(isNewNote = false)
+                        it.copy(
+                            isNewNote = false,
+                            lastEditedAt = timeNow.formatDate()
+                        )
                     }
                     savedStateHandle[NEW_NOTE_KEY] = false
                 }

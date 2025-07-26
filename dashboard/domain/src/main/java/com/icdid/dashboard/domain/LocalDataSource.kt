@@ -2,6 +2,7 @@ package com.icdid.dashboard.domain
 
 import com.icdid.core.domain.DataError
 import com.icdid.core.domain.Result
+import com.icdid.core.domain.model.SyncRecord
 import com.icdid.dashboard.domain.model.NoteDomain
 import com.icdid.dashboard.domain.model.SyncOperation
 import kotlinx.coroutines.flow.Flow
@@ -21,4 +22,7 @@ interface LocalDataSource {
         noteDomain: NoteDomain? = null,
         operation: SyncOperation
     )
+
+    suspend fun getPendingSync(): List<SyncRecord>
+    suspend fun deletePendingSync(id: String)
 }

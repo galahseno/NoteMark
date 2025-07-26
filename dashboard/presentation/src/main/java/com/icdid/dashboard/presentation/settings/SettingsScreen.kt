@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -24,6 +25,8 @@ import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -50,7 +53,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.icdid.core.domain.model.SyncInterval
 import com.icdid.core.presentation.composables.NoteMarkDefaultScreen
 import com.icdid.core.presentation.composables.NoteMarkTopAppBar
 import com.icdid.core.presentation.model.DeviceType
@@ -61,7 +66,6 @@ import com.icdid.core.presentation.utils.SnackbarController
 import com.icdid.core.presentation.utils.SnackbarEvent
 import com.icdid.core.presentation.utils.applyIf
 import com.icdid.core.presentation.utils.crop
-import com.icdid.core.domain.model.SyncInterval
 import com.icdid.dashboard.presentation.R
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -85,6 +89,26 @@ fun SettingsRoot(
                     SnackbarController.sendEvent(
                         event = SnackbarEvent(
                             message = event.error.asString(context)
+                        )
+                    )
+                }
+            }
+
+            is SettingsEvent.SyncError -> {
+                scope.launch {
+                    SnackbarController.sendEvent(
+                        event = SnackbarEvent(
+                            message = event.error.asString(context)
+                        )
+                    )
+                }
+            }
+
+            SettingsEvent.SyncSuccess -> {
+                scope.launch {
+                    SnackbarController.sendEvent(
+                        event = SnackbarEvent(
+                            message = context.getString(R.string.sync_success)
                         )
                     )
                 }
@@ -286,7 +310,7 @@ fun SettingsScreen(
                         interactionSource = null,
                         indication = null
                     ) {
-                        onAction(SettingsAction.OnSyncDataClick)
+                        onAction(SettingsAction.OnManualSyncClick)
                     },
                 verticalAlignment = Alignment.Top,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -346,6 +370,31 @@ fun SettingsScreen(
                     )
                 )
             }
+        }
+
+        if (state.isSyncing) {
+            AlertDialog(
+                modifier = Modifier.sizeIn(maxWidth = 125.dp, maxHeight = 125.dp),
+                onDismissRequest = {},
+                confirmButton = {},
+                dismissButton = {},
+                title = null,
+                text = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                },
+                properties = DialogProperties(
+                    dismissOnBackPress = false,
+                    dismissOnClickOutside = true
+                ),
+                containerColor = MaterialTheme.colorScheme.surface
+            )
         }
     }
 }
