@@ -10,4 +10,5 @@
     <string name="error_unknown">An unknown error occurred.</string>
     <string name="notemark">NoteMark</string>
     <string name="save_note">Save note</string>
+    <string name="error_no_data">Failed to sync, no data notes found</string>
 </resources>

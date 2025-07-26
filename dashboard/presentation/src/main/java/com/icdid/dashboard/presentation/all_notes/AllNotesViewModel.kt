@@ -3,8 +3,8 @@ package com.icdid.dashboard.presentation.all_notes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.icdid.core.domain.Result
-import com.icdid.core.domain.SessionStorage
-import com.icdid.core.presentation.utils.NetworkMonitor
+import com.icdid.core.domain.connectivity.ConnectivityObserver
+import com.icdid.core.domain.session.SessionStorage
 import com.icdid.core.presentation.utils.asUiText
 import com.icdid.dashboard.domain.NotesRepository
 import com.icdid.dashboard.domain.model.NoteDomain
@@ -27,7 +27,7 @@ import java.util.UUID
 class AllNotesViewModel(
     sessionStorage: SessionStorage,
     private val notesRepository: NotesRepository,
-    private val networkMonitor: NetworkMonitor,
+    private val connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AllNotesState())
@@ -55,7 +55,7 @@ class AllNotesViewModel(
     }
 
     private fun observeNetworkMonitor() {
-        networkMonitor.isConnected
+        connectivityObserver.isConnected
             .onEach { isConnected ->
                 _state.update {
                     it.copy(

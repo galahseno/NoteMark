@@ -2,7 +2,7 @@ package com.icdid.core.data.security
 
 import android.util.Base64
 import com.icdid.core.data.security.KeyManager.TRANSFORMATION
-import com.icdid.core.domain.EncryptionService
+import com.icdid.core.domain.encrypt.EncryptionService
 import java.security.MessageDigest
 import javax.crypto.Cipher
 import javax.crypto.SecretKey

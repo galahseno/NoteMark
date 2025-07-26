@@ -8,8 +8,8 @@ import com.icdid.core.data.network.post
 import com.icdid.core.domain.DataError
 import com.icdid.core.domain.EmptyResult
 import com.icdid.core.domain.Result
-import com.icdid.core.domain.SessionStorage
-import com.icdid.core.domain.UserSettings
+import com.icdid.core.domain.session.SessionStorage
+import com.icdid.core.domain.session.UserSettings
 import com.icdid.core.domain.asEmptyDataResult
 import com.icdid.core.domain.model.AuthInfo
 import io.ktor.client.HttpClient

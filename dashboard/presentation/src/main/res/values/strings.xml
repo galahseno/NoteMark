@@ -27,4 +27,5 @@
     <string name="_15_minutes">15 minutes</string>
     <string name="_30_minutes">30 minutes</string>
     <string name="_1_hour">1 hour</string>
+    <string name="sync_success">Sync success</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.icdid.core.domain
+package com.icdid.core.domain.encrypt
 
 interface EncryptionService {
     fun encrypt(data: String): Pair<String, String>

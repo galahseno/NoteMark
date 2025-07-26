@@ -6,6 +6,7 @@ import androidx.datastore.dataStoreFile
 import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.icdid.core.data.conectivity.AndroidConnectivityObserver
 import com.icdid.core.data.database.NoteMarkDatabase
 import com.icdid.core.data.datastore.EncryptedSessionStorage
 import com.icdid.core.data.model.AuthInfoSerializable
@@ -15,8 +16,9 @@ import com.icdid.core.data.security.KeyManager
 import com.icdid.core.data.serializer.DataStoreSerializer
 import com.icdid.core.data.sync.SyncNotesWorkerScheduler
 import com.icdid.core.data.sync.UserIdProviderImpl
-import com.icdid.core.domain.EncryptionService
-import com.icdid.core.domain.SessionStorage
+import com.icdid.core.domain.connectivity.ConnectivityObserver
+import com.icdid.core.domain.encrypt.EncryptionService
+import com.icdid.core.domain.session.SessionStorage
 import com.icdid.core.domain.sync.SyncNotesScheduler
 import com.icdid.core.domain.sync.UserIdProvider
 import org.koin.android.ext.koin.androidContext
@@ -86,4 +88,5 @@ val coreDataModule = module {
     singleOf(::AesEncryptionService) bind EncryptionService::class
     singleOf(::SyncNotesWorkerScheduler) bind SyncNotesScheduler::class
     singleOf(::UserIdProviderImpl) bind UserIdProvider::class
+    singleOf(::AndroidConnectivityObserver) bind ConnectivityObserver::class
 }

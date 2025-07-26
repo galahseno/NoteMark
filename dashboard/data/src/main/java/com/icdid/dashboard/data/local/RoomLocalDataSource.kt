@@ -7,6 +7,7 @@ import com.icdid.core.data.model.NoteEntity
 import com.icdid.core.data.model.SyncRecordEntity
 import com.icdid.core.domain.DataError
 import com.icdid.core.domain.Result
+import com.icdid.core.domain.model.SyncRecord
 import com.icdid.core.domain.sync.UserIdProvider
 import com.icdid.dashboard.data.model.toNoteRequest
 import com.icdid.dashboard.domain.LocalDataSource
@@ -21,9 +22,10 @@ class RoomLocalDataSource(
     private val noteDao: NoteDao,
     private val syncRecordDao: SyncRecordDao,
     private val userIdProvider: UserIdProvider
-): LocalDataSource {
+) : LocalDataSource {
     override fun getNotes(): Flow<List<NoteDomain>> {
-        return noteDao.getNotes().map { it.map { noteEntity ->
+        return noteDao.getNotes().map {
+            it.map { noteEntity ->
                 NoteDomain(
                     id = noteEntity.id,
                     title = noteEntity.title,
@@ -109,5 +111,22 @@ class RoomLocalDataSource(
 
             syncRecordDao.insertPendingSync(syncRecord)
         }
+    }
+
+    override suspend fun getPendingSync(): List<SyncRecord> {
+        return syncRecordDao.getPendingSync().map {
+            SyncRecord(
+                id = it.id,
+                userId = it.userId,
+                noteId = it.noteId,
+                payload = it.payload,
+                operation = it.operation,
+                timestamp = it.timestamp
+            )
+        }
+    }
+
+    override suspend fun deletePendingSync(id: String) {
+       syncRecordDao.delete(id)
     }
 }

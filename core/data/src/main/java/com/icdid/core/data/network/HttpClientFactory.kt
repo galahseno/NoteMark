@@ -2,7 +2,7 @@ package com.icdid.core.data.network
 
 import com.icdid.core.data.BuildConfig
 import com.icdid.core.domain.Result
-import com.icdid.core.domain.SessionStorage
+import com.icdid.core.domain.session.SessionStorage
 import com.icdid.core.domain.model.AuthInfo
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android

@@ -3,10 +3,11 @@ package com.icdid.core.data.datastore
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.icdid.core.domain.EncryptionService
-import com.icdid.core.domain.UserSettings
+import com.icdid.core.domain.encrypt.EncryptionService
 import com.icdid.core.domain.model.SyncInterval
+import com.icdid.core.domain.session.UserSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -38,7 +39,24 @@ class UserSettingsDataStore(
         }.toString()
     }
 
+    override suspend fun saveLastSyncTimestamp(timestamp: Long) {
+        dataStore.edit { preferences ->
+            preferences[LAST_SYNC_KEY] = timestamp
+        }
+    }
+
+    override fun getLastSyncTimestamp(): Flow<Long?> {
+        return dataStore.data.map {
+            it[LAST_SYNC_KEY]
+        }
+    }
+
+    override suspend fun clear() {
+        dataStore.edit { it.clear() }
+    }
+
     companion object {
         private val SYNC_INTERVAL_KEY = stringPreferencesKey("sync_interval")
+        private val LAST_SYNC_KEY = longPreferencesKey("last_sync_timestamp")
     }
 }

@@ -7,7 +7,7 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.await
 import com.icdid.core.data.database.SyncRecordDao
-import com.icdid.core.domain.UserSettings
+import com.icdid.core.domain.session.UserSettings
 import com.icdid.core.domain.model.SyncInterval
 import com.icdid.core.domain.sync.SyncNotesScheduler
 import kotlinx.coroutines.CoroutineScope

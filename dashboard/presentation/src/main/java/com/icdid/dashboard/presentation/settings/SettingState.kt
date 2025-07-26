@@ -7,5 +7,6 @@ import com.icdid.dashboard.presentation.R
 data class SettingState(
     val syncInterval: SyncInterval = SyncInterval.Manual,
     val isSyncIntervalDialogVisible: Boolean = false,
-    val lastSync: UiText = UiText.StringResource(R.string.never_synced)
+    val lastSync: UiText = UiText.StringResource(R.string.never_synced),
+    val isSyncing: Boolean = false
 )

@@ -1,7 +1,7 @@
 package com.icdid.core.data.sync
 
-import com.icdid.core.domain.SessionStorage
-import com.icdid.core.domain.UserSettings
+import com.icdid.core.domain.session.SessionStorage
+import com.icdid.core.domain.session.UserSettings
 import com.icdid.core.domain.sync.UserIdProvider
 import kotlinx.coroutines.flow.first
 

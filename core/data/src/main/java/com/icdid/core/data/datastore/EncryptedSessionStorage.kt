@@ -3,7 +3,7 @@ package com.icdid.core.data.datastore
 import androidx.datastore.core.DataStore
 import com.icdid.core.data.model.AuthInfoSerializable
 import com.icdid.core.data.model.toAuthInfo
-import com.icdid.core.domain.SessionStorage
+import com.icdid.core.domain.session.SessionStorage
 import com.icdid.core.domain.model.AuthInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
