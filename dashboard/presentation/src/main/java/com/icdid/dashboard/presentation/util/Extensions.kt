@@ -1,8 +1,10 @@
 package com.icdid.dashboard.presentation.util
 
+import android.text.format.DateUtils
 import com.icdid.core.presentation.utils.UiText
 import com.icdid.dashboard.presentation.R
 import com.icdid.dashboard.presentation.model.NotesContentType
+import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -10,6 +12,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import java.util.Date
 import java.util.Locale
 
 fun String.toInitials(): String {
@@ -27,10 +30,12 @@ fun String.toInitials(): String {
                 word.uppercase()
             }
         }
+
         words.size == 2 -> {
             // Two words: first character of each word
             "${words[0].first().uppercase()}${words[1].first().uppercase()}"
         }
+
         else -> {
             // More than two words: first character of first and last word
             "${words.first().first().uppercase()}${words.last().first().uppercase()}"
@@ -79,5 +84,42 @@ fun String.formatDate(): UiText {
         val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm")
         val localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
         UiText.DynamicString(localDateTime.format(formatter))
+    }
+}
+
+fun Long?.toUiTextForLastSync(): UiText {
+    if (this == null) {
+        return UiText.StringResource(R.string.never_synced)
+    }
+
+    val now = System.currentTimeMillis()
+    val diff = now - this
+
+    return when {
+        /*
+        less than 5 minutes ago
+         */
+        diff < 5 * 60 * 1000 -> {
+            UiText.StringResource(R.string.just_now)
+        }
+        /*
+        within the past 7 days
+         */
+        diff < 7 * 24 * 60 * 60 * 1000 -> {
+            val relative = DateUtils.getRelativeTimeSpanString(
+                this,
+                now,
+                DateUtils.MINUTE_IN_MILLIS
+            )
+            UiText.DynamicString(relative.toString())
+        }
+        /*
+        more than 7 days ago
+         */
+        else -> {
+            val formatted = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+                .format(Date(this))
+            UiText.DynamicString(formatted)
+        }
     }
 }

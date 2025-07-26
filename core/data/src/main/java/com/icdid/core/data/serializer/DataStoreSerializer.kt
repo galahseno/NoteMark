@@ -1,7 +1,7 @@
 package com.icdid.core.data.serializer
 
 import androidx.datastore.core.Serializer
-import com.icdid.core.domain.EncryptionService
+import com.icdid.core.domain.encrypt.EncryptionService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.KSerializer

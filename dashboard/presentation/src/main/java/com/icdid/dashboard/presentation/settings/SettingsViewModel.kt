@@ -3,16 +3,17 @@ package com.icdid.dashboard.presentation.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.icdid.core.domain.Result
-import com.icdid.core.domain.UserSettings
 import com.icdid.core.domain.model.SyncInterval
+import com.icdid.core.domain.session.UserSettings
 import com.icdid.core.presentation.utils.asUiText
 import com.icdid.dashboard.domain.NotesRepository
+import com.icdid.dashboard.presentation.util.toUiTextForLastSync
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -29,27 +30,51 @@ class SettingsViewModel(
     val event = _event.receiveAsFlow()
 
     init {
-        userSettings
-            .getSyncInterval()
-            .distinctUntilChanged()
-            .onEach { interval ->
-                _state.update {
-                    it.copy(
-                        syncInterval = SyncInterval.valueOf(interval)
-                    )
-                }
+        combine(
+            userSettings.getSyncInterval().distinctUntilChanged(),
+            userSettings.getLastSyncTimestamp().distinctUntilChanged()
+        ) { syncInterval, lastSyncTimestamp ->
+            _state.update {
+                it.copy(
+                    syncInterval = SyncInterval.valueOf(syncInterval),
+                    lastSync = lastSyncTimestamp.toUiTextForLastSync()
+                )
             }
+        }
             .launchIn(viewModelScope)
     }
 
     fun onAction(action: SettingsAction) {
         when (action) {
             is SettingsAction.OnLogOutClick -> onLogOutClick()
-            SettingsAction.OnSyncDataClick -> Unit
+            SettingsAction.OnManualSyncClick -> onManualSyncClick()
             SettingsAction.OnSyncIntervalClick -> onSyncIntervalClick()
             SettingsAction.OnSyncIntervalDialogDismiss -> onSyncIntervalDialogDismiss()
             is SettingsAction.OnSyncIntervalDialogClick -> onSyncIntervalDialogClick(action.syncInterval)
             else -> Unit
+        }
+    }
+
+    private fun onManualSyncClick() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    isSyncing = true
+                )
+            }
+
+            val result = notesRepository.syncNotesManually()
+
+            when (result) {
+                is Result.Error -> _event.send(SettingsEvent.SyncError(result.error.asUiText()))
+                is Result.Success -> _event.send(SettingsEvent.SyncSuccess)
+            }
+
+            _state.update {
+                it.copy(
+                    isSyncing = false
+                )
+            }
         }
     }
 

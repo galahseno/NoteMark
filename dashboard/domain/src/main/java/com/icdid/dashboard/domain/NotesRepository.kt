@@ -12,6 +12,7 @@ interface NotesRepository {
     suspend fun fetchNotes(): EmptyResult<DataError>
     suspend fun upsertNote(note: NoteDomain, isUpdate: Boolean):  Result<NoteId, DataError>
     suspend fun deleteNote(id: NoteId)
-    suspend fun deleteAllNotes()
     suspend fun logout(): EmptyResult<DataError.Network>
+
+    suspend fun syncNotesManually(): EmptyResult<DataError>
 }

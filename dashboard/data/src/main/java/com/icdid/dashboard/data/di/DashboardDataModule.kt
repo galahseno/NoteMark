@@ -5,7 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.icdid.core.data.datastore.UserSettingsDataStore
-import com.icdid.core.domain.UserSettings
+import com.icdid.core.domain.session.UserSettings
 import com.icdid.dashboard.data.NotesRepositoryImpl
 import com.icdid.dashboard.data.local.RoomLocalDataSource
 import com.icdid.dashboard.data.network.KtorRemoteDataSource

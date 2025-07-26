@@ -5,11 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.icdid.core.domain.SessionStorage
-import com.icdid.core.domain.UserSettings
 import com.icdid.core.domain.model.SyncInterval
+import com.icdid.core.domain.session.SessionStorage
+import com.icdid.core.domain.session.UserSettings
 import com.icdid.core.domain.sync.SyncNotesScheduler
-import com.icdid.core.presentation.utils.NetworkMonitor
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
@@ -19,7 +18,6 @@ import kotlinx.coroutines.flow.stateIn
 
 class MainViewModel(
     sessionStorage: SessionStorage,
-    private val networkMonitor: NetworkMonitor,
     userSettings: UserSettings,
     syncNotesScheduler: SyncNotesScheduler
 ) : ViewModel() {
@@ -57,10 +55,5 @@ class MainViewModel(
                 }
             }
             .launchIn(viewModelScope)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        networkMonitor.stopMonitoring()
     }
 }
