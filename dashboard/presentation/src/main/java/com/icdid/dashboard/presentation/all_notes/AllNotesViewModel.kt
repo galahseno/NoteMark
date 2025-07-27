@@ -4,13 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.icdid.core.domain.Result
 import com.icdid.core.domain.connectivity.ConnectivityObserver
+import com.icdid.dashboard.domain.model.NoteDomain
 import com.icdid.core.domain.session.SessionStorage
 import com.icdid.core.presentation.utils.asUiText
 import com.icdid.dashboard.domain.NotesRepository
-import com.icdid.dashboard.domain.model.NoteDomain
 import com.icdid.dashboard.presentation.util.toInitials
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -82,7 +81,7 @@ class AllNotesViewModel(
     private fun loadNotes() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            delay(500)
+            notesRepository.syncNotesAndFetchNotes()
             _state.update { it.copy(isLoading = false) }
         }
     }

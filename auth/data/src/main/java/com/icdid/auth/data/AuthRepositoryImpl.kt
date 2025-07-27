@@ -8,16 +8,16 @@ import com.icdid.core.data.network.post
 import com.icdid.core.domain.DataError
 import com.icdid.core.domain.EmptyResult
 import com.icdid.core.domain.Result
-import com.icdid.core.domain.session.SessionStorage
-import com.icdid.core.domain.session.UserSettings
 import com.icdid.core.domain.asEmptyDataResult
 import com.icdid.core.domain.model.AuthInfo
+import com.icdid.core.domain.session.SessionStorage
+import com.icdid.core.domain.session.UserSettings
 import io.ktor.client.HttpClient
 
 class AuthRepositoryImpl(
     private val httpClient: HttpClient,
     private val sessionStorage: SessionStorage,
-    private val userSettings: UserSettings
+    private val userSettings: UserSettings,
 ) : AuthRepository {
     override suspend fun login(email: String, password: String): EmptyResult<DataError.Network> {
         val result = httpClient.post<LoginRequest, LoginResponse>(
@@ -25,7 +25,7 @@ class AuthRepositoryImpl(
             body = LoginRequest(email, password)
         )
 
-        if(result is Result.Success) {
+        if (result is Result.Success) {
             sessionStorage.set(
                 AuthInfo(
                     accessToken = result.data.accessToken,
@@ -38,7 +38,11 @@ class AuthRepositoryImpl(
         return result.asEmptyDataResult()
     }
 
-    override suspend fun register(username: String, email: String, password: String): EmptyResult<DataError.Network> {
+    override suspend fun register(
+        username: String,
+        email: String,
+        password: String
+    ): EmptyResult<DataError.Network> {
         return httpClient.post<RegisterRequest, Unit>(
             route = "/auth/register",
             body = RegisterRequest(username, email, password)

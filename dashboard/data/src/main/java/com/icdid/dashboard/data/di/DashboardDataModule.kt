@@ -5,13 +5,13 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.icdid.core.data.datastore.UserSettingsDataStore
+import com.icdid.dashboard.domain.LocalDataSource
+import com.icdid.dashboard.domain.RemoteDataSource
 import com.icdid.core.domain.session.UserSettings
 import com.icdid.dashboard.data.NotesRepositoryImpl
 import com.icdid.dashboard.data.local.RoomLocalDataSource
 import com.icdid.dashboard.data.network.KtorRemoteDataSource
-import com.icdid.dashboard.domain.LocalDataSource
 import com.icdid.dashboard.domain.NotesRepository
-import com.icdid.dashboard.domain.RemoteDataSource
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named

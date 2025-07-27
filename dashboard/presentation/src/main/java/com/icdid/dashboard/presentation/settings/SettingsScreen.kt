@@ -67,6 +67,7 @@ import com.icdid.core.presentation.utils.SnackbarEvent
 import com.icdid.core.presentation.utils.applyIf
 import com.icdid.core.presentation.utils.crop
 import com.icdid.dashboard.presentation.R
+import com.icdid.dashboard.presentation.components.NoteDialog
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -372,7 +373,21 @@ fun SettingsScreen(
             }
         }
 
-        if (state.isSyncing) {
+        NoteDialog(
+            showDialog = state.isUnsyncedDialogVisible,
+            onDismiss = {
+                onAction(SettingsAction.OnLogoutDialogDismiss)
+            },
+            onConfirm = {
+                onAction(SettingsAction.OnLogoutDialogConfirm)
+            },
+            title = stringResource(R.string.are_you_sure_to_logout),
+            content = stringResource(R.string.you_have_unsynced_changes_what_would_you_like_to_do_before_logging_out),
+            confirmText = stringResource(R.string.sync_now),
+            dismissText = stringResource(R.string.log_out_without_syncing)
+        )
+
+        if (state.isLoading) {
             AlertDialog(
                 modifier = Modifier.sizeIn(maxWidth = 125.dp, maxHeight = 125.dp),
                 onDismissRequest = {},

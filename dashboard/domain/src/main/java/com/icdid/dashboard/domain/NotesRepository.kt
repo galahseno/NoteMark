@@ -9,10 +9,12 @@ import kotlinx.coroutines.flow.Flow
 interface NotesRepository {
     fun getNotes(): Flow<List<NoteDomain>>
     suspend fun getNote(id: NoteId): NoteDomain?
-    suspend fun fetchNotes(): EmptyResult<DataError>
+    suspend fun syncNotesAndFetchNotes(): EmptyResult<DataError>
     suspend fun upsertNote(note: NoteDomain, isUpdate: Boolean):  Result<NoteId, DataError>
     suspend fun deleteNote(id: NoteId)
-    suspend fun logout(): EmptyResult<DataError.Network>
+    suspend fun logout(): EmptyResult<DataError>
+    suspend fun logoutAndSync(): EmptyResult<DataError>
 
     suspend fun syncNotesManually(): EmptyResult<DataError>
+    suspend fun isHasPendingSync(): Boolean
 }
