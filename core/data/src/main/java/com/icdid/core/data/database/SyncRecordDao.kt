@@ -7,8 +7,8 @@ import com.icdid.core.data.model.SyncRecordEntity
 
 @Dao
 interface SyncRecordDao {
-    @Query("SELECT * FROM sync_record order by timestamp asc")
-    suspend fun getPendingSync(): List<SyncRecordEntity>
+    @Query("SELECT * FROM sync_record WHERE userId = :userId order by timestamp asc")
+    suspend fun getPendingSync(userId: String): List<SyncRecordEntity>
 
     @Insert
     suspend fun insertPendingSync(syncRecordEntity: SyncRecordEntity)

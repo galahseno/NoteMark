@@ -28,4 +28,9 @@
     <string name="_30_minutes">30 minutes</string>
     <string name="_1_hour">1 hour</string>
     <string name="sync_success">Sync success</string>
+    <string name="you_need_an_internet_connection_to_log_out">You need an internet connection to log out.</string>
+    <string name="you_have_unsynced_changes_what_would_you_like_to_do_before_logging_out">You have unsynced changes. What would you like to do before logging out?</string>
+    <string name="sync_now">Sync now</string>
+    <string name="log_out_without_syncing">Log out without syncing</string>
+    <string name="are_you_sure_to_logout">Are you sure to Logout?</string>
 </resources>

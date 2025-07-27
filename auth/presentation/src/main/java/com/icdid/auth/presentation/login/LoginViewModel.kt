@@ -4,10 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.icdid.auth.domain.AuthRepository
 import com.icdid.auth.domain.UserDataValidator
-import com.icdid.auth.presentation.R
-import com.icdid.core.domain.DataError
 import com.icdid.core.domain.Result
-import com.icdid.core.presentation.utils.UiText
 import com.icdid.core.presentation.utils.asUiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,16 +51,11 @@ class LoginViewModel(
                 )
             }
 
-            when(result) {
+            when (result) {
                 is Result.Error -> {
-                    if(result.error == DataError.Network.UNAUTHORIZED) {
-                        _event.send(
-                            LoginEvent.Error(UiText.StringResource(R.string.invalid_login_credentials))
-                        )
-                    } else {
-                        _event.send(LoginEvent.Error(result.error.asUiText()))
-                    }
+                    _event.send(LoginEvent.Error(result.error.asUiText()))
                 }
+
                 is Result.Success -> {
                     _event.send(LoginEvent.LoginSuccess)
                 }

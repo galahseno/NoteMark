@@ -7,13 +7,15 @@ import com.icdid.core.data.model.NoteEntity
 import com.icdid.core.data.model.SyncRecordEntity
 import com.icdid.core.domain.DataError
 import com.icdid.core.domain.Result
-import com.icdid.core.domain.model.SyncRecord
 import com.icdid.core.domain.sync.UserIdProvider
+import com.icdid.dashboard.data.model.NoteDto
+import com.icdid.dashboard.data.model.toNoteDomain
 import com.icdid.dashboard.data.model.toNoteRequest
 import com.icdid.dashboard.domain.LocalDataSource
 import com.icdid.dashboard.domain.NoteId
 import com.icdid.dashboard.domain.model.NoteDomain
 import com.icdid.dashboard.domain.model.SyncOperation
+import com.icdid.dashboard.domain.model.SyncRecord
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
@@ -113,13 +115,17 @@ class RoomLocalDataSource(
         }
     }
 
-    override suspend fun getPendingSync(): List<SyncRecord> {
-        return syncRecordDao.getPendingSync().map {
+    override suspend fun getPendingSync(userId: String): List<SyncRecord> {
+        return syncRecordDao.getPendingSync(userId).map {
+            val notePayload = it.payload
+                ?.let { payload -> Json.decodeFromString<NoteDto>(payload) }
+                ?.toNoteDomain()
+
             SyncRecord(
                 id = it.id,
                 userId = it.userId,
                 noteId = it.noteId,
-                payload = it.payload,
+                payload = notePayload,
                 operation = it.operation,
                 timestamp = it.timestamp
             )

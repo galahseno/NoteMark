@@ -2,9 +2,9 @@ package com.icdid.dashboard.domain
 
 import com.icdid.core.domain.DataError
 import com.icdid.core.domain.Result
-import com.icdid.core.domain.model.SyncRecord
 import com.icdid.dashboard.domain.model.NoteDomain
 import com.icdid.dashboard.domain.model.SyncOperation
+import com.icdid.dashboard.domain.model.SyncRecord
 import kotlinx.coroutines.flow.Flow
 
 typealias NoteId = String
@@ -23,6 +23,6 @@ interface LocalDataSource {
         operation: SyncOperation
     )
 
-    suspend fun getPendingSync(): List<SyncRecord>
+    suspend fun getPendingSync(userId: String): List<SyncRecord>
     suspend fun deletePendingSync(id: String)
 }

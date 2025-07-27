@@ -9,4 +9,6 @@ sealed interface SettingsAction {
     data class OnSyncIntervalDialogClick(val syncInterval: SyncInterval) : SettingsAction
     data object OnManualSyncClick : SettingsAction
     data object OnBackClick : SettingsAction
+    data object OnLogoutDialogConfirm : SettingsAction
+    data object OnLogoutDialogDismiss : SettingsAction
 }

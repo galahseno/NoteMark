@@ -11,7 +11,10 @@ fun DataError.asUiText(): UiText {
 
         DataError.Network.TOO_MANY_REQUEST -> UiText.StringResource(
             R.string.error_too_many_request
+        )
 
+        DataError.Network.UNAUTHORIZED -> UiText.StringResource(
+            R.string.invalid_login_credentials
         )
 
         DataError.Network.NO_INTERNET -> UiText.StringResource(

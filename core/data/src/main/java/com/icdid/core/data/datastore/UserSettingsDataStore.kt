@@ -32,7 +32,6 @@ class UserSettingsDataStore(
     override suspend fun getUserId(username: String): String {
         val hashedKey = encryptionService.hashKey(username)
         val key = stringPreferencesKey(hashedKey)
-
         val prefs = dataStore.data.first()
         return prefs[key] ?: UUID.randomUUID().also { newId ->
             dataStore.edit { it[key] = newId.toString() }
@@ -52,7 +51,10 @@ class UserSettingsDataStore(
     }
 
     override suspend fun clear() {
-        dataStore.edit { it.clear() }
+        dataStore.edit { preferences ->
+            preferences.remove(SYNC_INTERVAL_KEY)
+            preferences.remove(LAST_SYNC_KEY)
+        }
     }
 
     companion object {
