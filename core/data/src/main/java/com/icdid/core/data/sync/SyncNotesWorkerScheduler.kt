@@ -1,25 +1,23 @@
 package com.icdid.core.data.sync
 
 import android.content.Context
+import androidx.work.BackoffPolicy
 import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.await
-import com.icdid.core.data.database.SyncRecordDao
-import com.icdid.core.domain.session.UserSettings
 import com.icdid.core.domain.model.SyncInterval
 import com.icdid.core.domain.sync.SyncNotesScheduler
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import java.util.concurrent.TimeUnit
 
 class SyncNotesWorkerScheduler(
     private val context: Context,
-    private val pendingDao: SyncRecordDao,
-    private val userSettings: UserSettings,
-    private val applicationScope: CoroutineScope
 ): SyncNotesScheduler {
     override suspend fun scheduleSync(interval: SyncInterval) {
         // Cancel existing scheduled work
@@ -33,14 +31,29 @@ class SyncNotesWorkerScheduler(
             SyncInterval.Manual -> return // Don't schedule if Manual
         }
 
-        // Worker contraint
+        // Worker constraint
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
-        // TODO create periodic work request with interval, constraint and give initial delay
-        // TODO for handle if sync failed we can use back off criteria
-        // TODO enqueue work request with sync tag
+        val syncRequest = PeriodicWorkRequestBuilder<SyncWorker>(
+            repeatInterval = intervalMinutes,
+            repeatIntervalTimeUnit = TimeUnit.MINUTES
+        )
+            .setBackoffCriteria(
+                backoffPolicy = BackoffPolicy.LINEAR,
+                backoffDelay = SYNC_BACK_OFF_DELAY,
+                timeUnit = TimeUnit.SECONDS,
+            )
+            .setConstraints(constraints)
+            .build()
+
+        WorkManager.getInstance(context)
+            .enqueueUniquePeriodicWork(
+                SYNC_TAG,
+                ExistingPeriodicWorkPolicy.UPDATE,
+                syncRequest
+            )
     }
 
     override suspend fun cancelSync() {
@@ -60,8 +73,8 @@ class SyncNotesWorkerScheduler(
             .distinctUntilChanged()
     }
 
-
     companion object {
         private const val SYNC_TAG = "SYNC_WORKER"
+        private const val SYNC_BACK_OFF_DELAY = 15L
     }
 }

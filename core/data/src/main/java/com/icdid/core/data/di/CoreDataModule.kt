@@ -15,6 +15,7 @@ import com.icdid.core.data.security.AesEncryptionService
 import com.icdid.core.data.security.KeyManager
 import com.icdid.core.data.serializer.DataStoreSerializer
 import com.icdid.core.data.sync.SyncNotesWorkerScheduler
+import com.icdid.core.data.sync.SyncWorker
 import com.icdid.core.data.sync.UserIdProviderImpl
 import com.icdid.core.domain.connectivity.ConnectivityObserver
 import com.icdid.core.domain.encrypt.EncryptionService
@@ -22,6 +23,7 @@ import com.icdid.core.domain.session.SessionStorage
 import com.icdid.core.domain.sync.SyncNotesScheduler
 import com.icdid.core.domain.sync.UserIdProvider
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.workmanager.dsl.workerOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
@@ -89,4 +91,5 @@ val coreDataModule = module {
     singleOf(::SyncNotesWorkerScheduler) bind SyncNotesScheduler::class
     singleOf(::UserIdProviderImpl) bind UserIdProvider::class
     singleOf(::AndroidConnectivityObserver) bind ConnectivityObserver::class
+    workerOf(::SyncWorker)
 }

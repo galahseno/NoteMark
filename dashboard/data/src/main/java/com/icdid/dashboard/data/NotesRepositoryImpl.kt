@@ -5,9 +5,10 @@ import com.icdid.core.domain.EmptyResult
 import com.icdid.core.domain.Result
 import com.icdid.core.domain.asEmptyDataResult
 import com.icdid.dashboard.domain.model.NoteDomain
-import com.icdid.dashboard.domain.model.SyncOperation
+import com.icdid.core.domain.sync.SyncOperation
 import com.icdid.core.domain.session.SessionStorage
 import com.icdid.core.domain.session.UserSettings
+import com.icdid.core.domain.sync.NoteSyncManager
 import com.icdid.core.domain.sync.UserIdProvider
 import com.icdid.dashboard.domain.LocalDataSource
 import com.icdid.dashboard.domain.NoteId
@@ -24,7 +25,8 @@ class NotesRepositoryImpl(
     private val applicationScope: CoroutineScope,
     private val sessionStorage: SessionStorage,
     private val userSettings: UserSettings,
-    private val userIdProvider: UserIdProvider
+    private val userIdProvider: UserIdProvider,
+    private val noteSyncManager: NoteSyncManager,
 ) : NotesRepository {
     override fun getNotes(): Flow<List<NoteDomain>> {
         return localDataSource.getNotes()
@@ -121,7 +123,7 @@ class NotesRepositoryImpl(
     }
 
     override suspend fun logoutAndSync(): EmptyResult<DataError> {
-        val result = syncPendingNotes()
+        val result = noteSyncManager.syncPendingNotes()
         if (result is Result.Error) return result
 
         val logoutResult = logout()
@@ -131,7 +133,7 @@ class NotesRepositoryImpl(
     }
 
     override suspend fun syncNotesManually(): EmptyResult<DataError> {
-        val result = syncPendingNotes()
+        val result = noteSyncManager.syncPendingNotes()
         if (result is Result.Error) return result
 
         userSettings.saveLastSyncTimestamp(System.currentTimeMillis())
@@ -150,41 +152,8 @@ class NotesRepositoryImpl(
         return pendingSync.isNotEmpty()
     }
 
-    private suspend fun syncPendingNotes(): EmptyResult<DataError> {
-        val userId =
-            userIdProvider.getCurrentUserId() ?: return Result.Error(DataError.Local.NO_DATA)
-
-        val pendingSync = localDataSource.getPendingSync(userId)
-        if (pendingSync.isEmpty()) return Result.Error(DataError.Local.NO_DATA)
-
-        pendingSync.forEach { syncRecord ->
-            when (val operation = SyncOperation.valueOf(syncRecord.operation)) {
-                SyncOperation.CREATE, SyncOperation.UPDATE -> {
-                    val payload = syncRecord.payload ?: return Result.Error(DataError.Local.NO_DATA)
-                    val result = remoteDataSource.upsertNote(
-                        payload,
-                        isUpdate = operation == SyncOperation.UPDATE
-                    )
-                    if (result is Result.Error) return Result.Error(result.error)
-
-                    localDataSource.deletePendingSync(syncRecord.id)
-                }
-
-                SyncOperation.DELETE -> {
-                    val noteId = syncRecord.noteId ?: return Result.Error(DataError.Local.NO_DATA)
-                    val result = remoteDataSource.deleteNote(noteId)
-                    if (result is Result.Error) return Result.Error(result.error)
-
-                    localDataSource.deletePendingSync(syncRecord.id)
-                }
-            }
-        }
-        return Result.Success(Unit)
-    }
-
     private suspend fun fetchNotes(): EmptyResult<DataError> {
-        val result = remoteDataSource.getNotes()
-        return when (result) {
+        return when (val result = remoteDataSource.getNotes()) {
             is Result.Error -> result.asEmptyDataResult()
             is Result.Success -> {
                 applicationScope.async {

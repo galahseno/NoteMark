@@ -8,6 +8,8 @@ import com.icdid.core.data.datastore.UserSettingsDataStore
 import com.icdid.dashboard.domain.LocalDataSource
 import com.icdid.dashboard.domain.RemoteDataSource
 import com.icdid.core.domain.session.UserSettings
+import com.icdid.core.domain.sync.NoteSyncManager
+import com.icdid.dashboard.data.NoteSyncManagerImpl
 import com.icdid.dashboard.data.NotesRepositoryImpl
 import com.icdid.dashboard.data.local.RoomLocalDataSource
 import com.icdid.dashboard.data.network.KtorRemoteDataSource
@@ -40,4 +42,6 @@ val dashboardDataModule = module {
             get(),
         )
     } bind UserSettings::class
+
+    singleOf(::NoteSyncManagerImpl) bind NoteSyncManager::class
 }

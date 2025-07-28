@@ -1,4 +1,4 @@
-package com.icdid.dashboard.domain.model
+package com.icdid.core.domain.sync
 
 enum class SyncOperation {
     CREATE,
