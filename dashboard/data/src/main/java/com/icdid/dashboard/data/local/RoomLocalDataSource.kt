@@ -14,7 +14,7 @@ import com.icdid.dashboard.data.model.toNoteRequest
 import com.icdid.dashboard.domain.LocalDataSource
 import com.icdid.dashboard.domain.NoteId
 import com.icdid.dashboard.domain.model.NoteDomain
-import com.icdid.dashboard.domain.model.SyncOperation
+import com.icdid.core.domain.sync.SyncOperation
 import com.icdid.dashboard.domain.model.SyncRecord
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
