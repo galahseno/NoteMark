@@ -135,13 +135,13 @@ fun NoteMarkDefaultScreen(
             content()
         }
 
-        val useDarkTheme = isSystemInDarkTheme()
-        SideEffect {
-            val window = (view.context as? Activity)?.window
-            if (!view.isInEditMode && window != null) {
-                WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars =
-                    if (isFromAuthGraph) false else !useDarkTheme
+            val useDarkTheme = isSystemInDarkTheme()
+            SideEffect {
+                val window = (view.context as? Activity)?.window
+                if (!view.isInEditMode && window != null) {
+                    WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars =
+                        if (isFromAuthGraph) false else !useDarkTheme
+                }
             }
-        }
     }
 }
