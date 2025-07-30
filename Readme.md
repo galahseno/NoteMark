@@ -1,23 +1,23 @@
-# 📝 NoteMark App
+<img src="assets/screenshots/cover.png" style="width: 100%; height: auto;"/>
 
-**NoteMark** is an online notes manager app built for the Mobile Dev Campus by [Phillip Lackner](https://pl-coding.com/campus) as part of the monthly challenge. This app is made for fun and to improve skills.
+**NoteMark** is an offline-first notes manager app built for the Mobile Dev Campus by [Phillip Lackner](https://pl-coding.com/campus) as part of the monthly challenge. This app is made for fun and to improve skills.
 
 ---
 
 ## Project Status
 
-This project is divided in 4 different milestones that are launched every fortnight. 
-We are currently working in **milestone 3**
+This project was divided in 4 different milestones that were launched every fortnight. Was built in June and July 2025.
 
 ### 🚨 Latest Features ###
 
+- **General development**
+  - Offline first architecture developed. App works completely offline and can be synced with the server with different intervals
+  - Worker created to do the sync depending on the interval
 - **Settings Screen**
-  - New button for logging user out
+  - Sync interval selection (15min, 30min, 1hour and manual) item
+  - Sync Data item
 - **Detail Note Screen**
-  - Now detail note screen has 3 different modes:
-    - View: Just shows the note
-    - Read: Shows the note hiding the elements from the UI
-    - Edit: Allows to edit the note
+  - Edit mode changed to save the note after 500-100s from the last time the user typed something
 
 ---
 
@@ -31,12 +31,14 @@ We are currently working in **milestone 3**
 - ✅ Material Design 3 components and theming.
 - ✅ Data Store for user preferences (encrypted with security crypto).
 - ✅ Room for database
+- ✅ Offline first architecture
+- ✅ Workers
 
 ---
 
 ## 🎥 Demo ##
 
-https://github.com/user-attachments/assets/ca9d0867-7974-4d57-a733-7aa18c0a5080
+https://github.com/user-attachments/assets/1ad28820-9854-4023-90b0-42538931fc12
 
 ## 📱 Screenshots (portrait = dark mode || landscape = light mode) ##
 
@@ -94,5 +96,7 @@ This project is an open-source and free to use. Feel free to fork and upload you
 - Feeling more comfortable with Koin dependency injection.
 - Ktor as network client 
 - Data Store for user preferences.
+- Workers
+- Offline architecture
 
 ---

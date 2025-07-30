@@ -152,7 +152,7 @@ class NoteDetailViewModel(
                 }
 
                 NoteDetailMode.EDIT -> {
-                    if (_state.value.isNewNote && !hasUnsavedChanges()) {
+                    if (_state.value.isNewNote && !hasUnsavedChanges() || _state.value.title.isEmpty() && _state.value.content.isEmpty()) {
                         deleteNewNote()
                         _event.send(NoteDetailEvent.OnDiscardChanges)
                     } else {
